@@ -1,6 +1,6 @@
 {
- "name": "MoneyWise",
- "short_name": "MoneyWise",
+ "name": "Kudukka",
+ "short_name": "Kudukka",
  "start_url": "./",
  "scope": "./",
  "display": "standalone",
@@ -19,5 +19,6 @@
    "type": "image/png",
    "purpose": "any maskable"
   }
- ]
+ ],
+ "description": "Track every rupee, spend less, save more."
 }

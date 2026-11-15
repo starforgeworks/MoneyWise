@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-IN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>MoneyWise</title>
+<title>Kudukka</title>
 <meta name="theme-color" content="#0f766e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml"><link rel="icon" href="icon-192.png" sizes="192x192"><link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="application-name" content="Kudukka"><meta name="apple-mobile-web-app-title" content="Kudukka"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 [hidden]{display:none!important}
@@ -26,7 +26,7 @@ h3{font-size:14px;color:var(--muted);margin-bottom:10px;font-weight:600}
 .row{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
 .f{flex:1;min-width:130px;display:flex;flex-direction:column;gap:4px}
 .f label,.lbl{font-size:12px;color:var(--muted);font-weight:600}
-input,select{width:100%;background:var(--in);border:1px solid var(--bd);color:var(--text);border-radius:10px;padding:10px;font:inherit}
+input,select,textarea{width:100%;background:var(--in);border:1px solid var(--bd);color:var(--text);border-radius:10px;padding:10px;font:inherit}
 input[type=checkbox]{width:auto;accent-color:var(--ac)}
 button{font:inherit;cursor:pointer}
 .btn{border:0;border-radius:10px;padding:10px 16px;background:var(--ac);color:#fff;font-weight:600}
@@ -74,22 +74,58 @@ details summary{cursor:pointer;color:var(--ac);font-size:13px;font-weight:600;ma
 details ol{margin:8px 0 0 18px;font-size:13px;color:var(--muted)}details li{margin-bottom:4px}
 code{background:var(--in);padding:1px 5px;border-radius:5px;font-size:12px}
 .chart text{fill:var(--muted);font-size:10px}
+#psub button{font-size:13px;padding:10px 2px}
+.dwrap{position:relative;display:flex;gap:6px}.dwrap input[type=text]{flex:1;min-width:0}
+.dbtn{border:1px solid var(--bd);background:var(--in);border-radius:10px;padding:0 10px;font-size:16px}
+.dhid{position:absolute!important;left:0;bottom:0;width:1px!important;height:1px;opacity:0;pointer-events:none;padding:0!important;border:0!important}
+.tip{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--bd)}.tip:last-child{border:0}.tip .ti{font-size:20px;line-height:1.2}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;background:rgba(22,163,74,.14);color:var(--g);margin-top:4px}
+.wnav{display:flex;align-items:center;gap:8px}.wnav b{flex:1;text-align:center;font-size:14px}.wnav .ib{font-size:20px;width:40px;height:40px}
+.stk{display:flex;height:14px;border-radius:9px;overflow:hidden;background:var(--in);margin:8px 0}.stk i{display:block;height:100%}
+/* animations: a few short ones on things that change; nothing loops and nothing delays a tap.
+   Off when the phone asks for reduced motion or Settings > Animations is Off. */
+.btn,.ch,.ib,nav .fab span{transition:transform .08s ease-out,background-color .2s}
+nav .fab.ok span{background:var(--g)}
+@media (prefers-reduced-motion:no-preference){
+  html:not(.noanim) .btn:active,html:not(.noanim) .ch:active,html:not(.noanim) .ib:active{transform:scale(.96)}
+  html:not(.noanim) nav .fab:active span{transform:scale(.92)}
+  html:not(.noanim) nav .fab.ok span{animation:pop .35s ease-out}
+  html:not(.noanim) section.on{animation:fadeUp .22s ease-out}
+  html:not(.noanim) dialog[open] .sheet{animation:sheetUp .26s cubic-bezier(.2,.8,.2,1)}
+  html:not(.noanim) dialog[open]::backdrop{animation:fade .2s ease-out}
+  html:not(.noanim) .toast.show{animation:toastIn .22s ease-out}
+  html:not(.noanim) body.go .bar i,html:not(.noanim) body.go .stk i{animation:grow .6s cubic-bezier(.2,.8,.2,1) both;transform-origin:left}
+  html:not(.noanim) body.go .chart rect{animation:rise .5s cubic-bezier(.2,.8,.2,1) both;transform-origin:bottom;transform-box:fill-box}
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes sheetUp{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%)}}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes rise{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes pop{0%{transform:scale(.8)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
 </style>
 </head>
 <body>
 <main>
 <header>
-  <div class="logo"><img src="icon.svg" alt="" width="28" height="28">MoneyWise <span id="mon"></span></div>
+  <div class="logo"><img src="icon.svg" alt="" width="28" height="28">Kudukka <span id="mon"></span></div>
   <button class="ib" id="syb" title="Sync with Google Drive" hidden>☁️</button>
   <button class="ib" id="gear" title="Settings">⚙️</button>
 </header>
 
 <!-- HOME -->
 <section id="home" class="on">
+  <div id="msd"></div>
   <div id="al"></div>
   <div class="hero" id="hero"></div>
+  <div id="swp"></div>
+  <div id="wkc"></div>
   <div class="stats" id="sts"></div>
+  <div id="nwc"></div>
   <div id="ccard"></div>
+  <div id="rsv"></div>
+  <div id="efc"></div>
   <div id="hgoals"></div>
   <div class="card"><h3>Spending by category</h3><div id="dn"></div></div>
   <div class="card"><h3>Bills due soon</h3><div id="db"></div></div>
@@ -111,16 +147,17 @@ code{background:var(--in);padding:1px 5px;border-radius:5px;font-size:12px}
 
 <!-- PLAN -->
 <section id="pl">
-  <div class="seg sub" id="psub"><button data-v="bills" class="on">Bills</button><button data-v="rec">Repeats</button><button data-v="goals">Goals</button><button data-v="wish">Wishlist</button></div>
+  <div class="seg sub" id="psub"><button data-v="bills" class="on">Bills</button><button data-v="cards">Cards</button><button data-v="rec">Repeats</button><button data-v="goals">Goals</button><button data-v="wish">Wishlist</button></div>
 
   <div id="p-bills">
     <div class="card">
       <h3 id="bfh">Add a bill</h3>
       <div class="row">
-        <div class="f" style="flex:2"><label>Bill name</label><input id="bn" placeholder="Credit card, WiFi, recharge"></div>
+        <div class="f" style="flex:2"><label>Bill name</label><input id="bn" placeholder="WiFi, recharge, LIC premium"></div>
         <div class="f"><label>Amount (₹)</label><input id="ba" type="number" inputmode="decimal" min="0"></div>
         <div class="f"><label>Category</label><select id="bc"></select></div>
         <div class="f"><label>Kind</label><select id="bk"><option value="">Regular bill</option><option value="card">Credit card repayment</option></select></div>
+        <div class="f" id="bcdf" hidden><label>Which card</label><select id="bcd"></select></div>
         <div class="f"><label>Next due date</label><input id="bdate" type="date"></div>
         <div class="f"><label>Repeats</label><select id="bev"><option value="1">Every month</option><option value="2">Every 2 months</option><option value="3">Every 3 months</option><option value="6">Every 6 months</option><option value="12">Every year</option><option value="0">One-time</option></select></div>
       </div>
@@ -129,10 +166,26 @@ code{background:var(--in);padding:1px 5px;border-radius:5px;font-size:12px}
     <div class="card"><h3>All bills</h3><div id="bsum" class="m sm" style="margin-bottom:6px"></div><div id="bll"></div></div>
   </div>
 
+  <div id="p-cards" hidden>
+    <div class="card">
+      <h3 id="cfh">Add a credit card</h3>
+      <div class="row">
+        <div class="f" style="flex:2"><label>Card name</label><input id="kn" placeholder="e.g. HDFC Millennia"></div>
+        <div class="f"><label>Last 4 digits (optional)</label><input id="k4" inputmode="numeric" maxlength="4" placeholder="1234"></div>
+        <div class="f"><label>Credit limit (₹, optional)</label><input id="kl" type="number" inputmode="decimal" min="0"></div>
+        <div class="f"><label>Owed when you started tracking (₹)</label><input id="ko" type="number" inputmode="decimal" min="0"></div>
+        <div class="f"><label>Bill due day each month (1 to 31)</label><input id="kd" type="number" inputmode="numeric" min="1" max="31"></div>
+      </div>
+      <p class="m sm" style="margin-top:8px">The last 4 digits let "Fill from a bank / UPI SMS" pick the right card. A due day adds a monthly repayment bill for the card.</p>
+      <div class="row" style="margin-top:12px"><button class="btn" id="ks">Add card</button><button class="btn g" id="kcx" hidden>Cancel</button></div>
+    </div>
+    <div class="card"><h3>Your cards</h3><div id="kll"></div></div>
+  </div>
+
   <div id="p-rec" hidden>
     <div class="card">
       <h3 id="rfh">Add a repeating entry</h3>
-      <p class="m sm" style="margin-bottom:10px">Added automatically on the day. Good for salary, subscriptions you don't track as bills, and a monthly amount you put aside.</p>
+      <p class="m sm" style="margin-bottom:10px">Added automatically on the day. Good for salary, subscriptions, a SIP, an LIC premium (choose Saving and the goal it goes to), and a monthly amount you put aside.</p>
       <div class="seg" id="rt"><button data-v="expense" class="on">Expense</button><button data-v="income">Income</button><button data-v="saving">Saving</button></div>
       <div class="row" style="margin-top:12px">
         <div class="f"><label>Amount (₹)</label><input id="ra" type="number" inputmode="decimal" min="0"></div>
@@ -141,8 +194,8 @@ code{background:var(--in);padding:1px 5px;border-radius:5px;font-size:12px}
         <div class="f" style="flex:2"><label>Note</label><input id="rn" placeholder="e.g. Salary, Netflix"></div>
         <div class="f"><label>First date</label><input id="rd" type="date"></div>
         <div class="f"><label>Repeats</label><select id="rev"><option value="1">Every month</option><option value="2">Every 2 months</option><option value="3">Every 3 months</option><option value="6">Every 6 months</option><option value="12">Every year</option></select></div>
+        <div class="f" id="rkf"><label>Paid with</label><select id="rk"></select></div>
       </div>
-      <label class="check" id="rkf" style="margin-top:10px"><input type="checkbox" id="rk"> Paid by credit card</label>
       <div class="row" style="margin-top:12px"><button class="btn" id="rs">Add</button><button class="btn g" id="rcx" hidden>Cancel</button></div>
     </div>
     <div class="card"><h3>Repeating entries</h3><div id="rl"></div></div>
@@ -152,10 +205,13 @@ code{background:var(--in);padding:1px 5px;border-radius:5px;font-size:12px}
     <div class="card">
       <h3 id="gfh">Add a savings goal</h3>
       <div class="row">
-        <div class="f" style="flex:2"><label>Goal</label><input id="gn" placeholder="Emergency fund, phone, trip"></div>
-        <div class="f"><label>Target (₹)</label><input id="ga" type="number" inputmode="decimal" min="0"></div>
+        <div class="f" style="flex:2"><label>Goal</label><input id="gn" placeholder="Emergency fund, phone, trip, Nifty 50 SIP"></div>
+        <div class="f"><label>Type</label><select id="gk"><option value="save">Savings goal</option><option value="ef">Emergency fund</option><option value="invest">Investment (SIP, mutual fund, LIC)</option></select></div>
+        <div class="f"><label id="gal">Target (₹)</label><input id="ga" type="number" inputmode="decimal" min="0"></div>
+        <div class="f" id="gvf" hidden><label>Current value (₹)</label><input id="gv" type="number" inputmode="decimal" min="0" placeholder="From your fund app"></div>
         <div class="f"><label>By (optional)</label><input id="gby" type="month"></div>
       </div>
+      <p class="m sm" id="ghint" style="margin-top:8px" hidden></p>
       <div class="row" style="margin-top:12px"><button class="btn" id="gs">Add goal</button><button class="btn g" id="gcx" hidden>Cancel</button></div>
     </div>
     <div class="card"><h3>Your goals</h3><div id="gl"></div></div>
@@ -177,21 +233,25 @@ code{background:var(--in);padding:1px 5px;border-radius:5px;font-size:12px}
 
 <!-- REPORT -->
 <section id="rp">
-  <div class="card"><div class="f" style="max-width:200px"><label>Month</label><input type="month" id="rm"></div></div>
+  <div class="seg sub" id="rmode"><button data-v="week" class="on">Weekly report</button><button data-v="month">Monthly report</button></div>
+  <div class="card" id="rwk"><div class="wnav"><button class="ib" id="rwp" aria-label="Previous week">‹</button><b id="rwl"></b><button class="ib" id="rwn" aria-label="Next week">›</button></div></div>
+  <div class="card" id="rmo" hidden><div class="f" style="max-width:200px"><label>Month</label><input type="month" id="rm"></div></div>
   <div id="rpc"></div>
 </section>
 
 <!-- SETTINGS -->
 <section id="se">
-  <div class="card"><h3>Appearance</h3><div class="seg" id="sth"><button data-v="auto">Auto</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div></div>
+  <div class="card"><h3>Appearance</h3><div class="seg" id="sth"><button data-v="auto">Auto</button><button data-v="light">Light</button><button data-v="dark">Dark</button></div>
+    <div class="f" style="margin-top:12px"><label>Animations</label><div class="seg" id="san"><button data-v="on">On</button><button data-v="off">Off</button></div></div></div>
   <div class="card"><h3>Savings plan</h3>
     <p class="m sm" style="margin-bottom:10px">Spending budget = income − savings target − bills and repeating expenses.</p>
     <div class="row">
       <div class="f"><label>Expected monthly income (₹)</label><input id="pi" type="number" inputmode="decimal" min="0"></div>
       <div class="f"><label>Savings target this month (%)</label><input id="pt" type="number" step="0.5" min="0" max="60"></div>
       <div class="f"><label>Raise target each month by (%)</label><input id="ps" type="number" step="0.5" min="0"></div>
-      <div class="f"><label>Card due before you started tracking (₹)</label><input id="pc" type="number" inputmode="decimal" min="0"></div>
-      <div class="f"><label>Monthly credit card spending cap (₹)</label><input id="pcap" type="number" inputmode="decimal" min="0" placeholder="No cap"></div>
+      <div class="f"><label>Monthly spending cap across all cards (₹)</label><input id="pcap" type="number" inputmode="decimal" min="0" placeholder="No cap"></div>
+      <div class="f"><label>Card interest if not paid in full (% a month)</label><input id="pcr" type="number" step="0.05" min="0" max="10"></div>
+      <div class="f"><label>Emergency fund size (months of essentials)</label><input id="pem" type="number" step="1" min="1" max="12"></div>
     </div>
     <div class="f" style="margin-top:12px"><label>Show my spending limit</label><div class="seg" id="sper"><button data-v="day">Per day</button><button data-v="week">Per week</button></div></div>
     <button class="btn" id="psv" style="margin-top:12px">Save plan</button>
@@ -220,8 +280,19 @@ code{background:var(--in);padding:1px 5px;border-radius:5px;font-size:12px}
       <li>Under Authorized JavaScript origins add your site, e.g. <code>https://yourname.github.io</code> (no path).</li>
       <li>Copy the Client ID and paste it above.</li></ol></details>
   </div>
+  <div class="card"><h3>Daily tracking</h3>
+    <p class="m sm" style="margin-bottom:10px">From this date, Home lists any day with nothing noted so you can add it or mark it as no spending.</p>
+    <div class="row">
+      <div class="f"><label>Track every day from</label><input id="sstart" type="date"></div>
+      <div class="f"><label>Daily reminder time</label><input id="srt" type="time" value="21:00"></div>
+    </div>
+    <div class="row" style="margin-top:12px"><button class="btn" id="sstv">Save start date</button><button class="btn g" id="dics">Add daily reminder to calendar</button></div>
+    <details style="margin-top:10px"><summary>Starting fresh?</summary>
+      <p class="m sm" style="margin:8px 0">Deletes every entry dated before the start date (expenses, income, money put aside, card payments). Categories, bills, repeats, goals and settings stay. A backup file is downloaded first. Remember to set each card's <b>Owed when you started tracking</b> (Plan → Cards) to what you owe on the start date.</p>
+      <button class="btn r" id="sclr">Clear entries before the start date</button></details>
+  </div>
   <div class="card"><h3>Reminders</h3>
-    <p class="m sm" style="margin-bottom:10px">Calendar reminders ring even when the app is closed (9am the day before and on the due date). App alerts show warnings when you open MoneyWise.</p>
+    <p class="m sm" style="margin-bottom:10px">Calendar reminders ring even when the app is closed (9am the day before and on the due date). App alerts show warnings when you open Kudukka. On Android, if you installed Kudukka to your home screen, app alerts also remind you about un-noted days while the app is closed (Android decides the exact time).</p>
     <div class="row"><button class="btn" id="ics">Add bill reminders to calendar</button><button class="btn g" id="ntf">Turn on app alerts</button></div></div>
   <div class="card"><h3>Backup</h3>
     <div id="bkst" class="m sm" style="margin-bottom:10px"></div>
@@ -243,6 +314,10 @@ code{background:var(--in);padding:1px 5px;border-radius:5px;font-size:12px}
   <h2><span id="shT">Add</span><button class="ib" id="shx" aria-label="Close">✕</button></h2>
   <div class="seg" id="st"><button data-v="expense" class="on">Expense</button><button data-v="income">Income</button><button data-v="saving">Saving</button></div>
   <input id="sa" class="amt" type="number" inputmode="decimal" min="0" step="0.01" placeholder="₹0">
+  <details id="smsd"><summary>📋 Fill from a bank / UPI SMS</summary>
+    <textarea id="smst" rows="3" placeholder="Paste the SMS here, e.g. Rs.250.00 debited from A/c XX1234 to VPA swiggy@icici on 11-11-26" style="margin-top:8px"></textarea>
+    <div class="row" style="margin-top:8px"><button class="btn g s" id="smsp">Paste from clipboard</button><button class="btn s" id="smsf">Fill details</button></div>
+  </details>
   <div id="scw"><div class="lbl" style="margin-bottom:6px">Category</div><div class="chips" id="scats"></div></div>
   <div id="sgw" hidden>
     <div class="seg" id="swd" style="margin-bottom:10px"><button data-v="in" class="on">Put aside</button><button data-v="out">Take out</button></div>
@@ -251,8 +326,8 @@ code{background:var(--in);padding:1px 5px;border-radius:5px;font-size:12px}
   <div><input id="sn" placeholder="Note (optional)"><div class="chips" id="snotes" style="margin-top:6px"></div></div>
   <div class="row" style="align-items:center">
     <div class="f" style="max-width:170px"><label>Date</label><input id="sd" type="date"></div>
-    <label class="check" id="scf"><input type="checkbox" id="scard"> Paid by credit card</label>
   </div>
+  <div id="scf"><div class="lbl" style="margin-bottom:6px">Paid with</div><div class="chips" id="spay"></div></div>
   <div class="row"><button class="btn" id="ssave" style="flex:1">Save</button><button class="btn r" id="sdel" hidden>Delete</button></div>
 </div></dialog>
 
@@ -266,6 +341,13 @@ code{background:var(--in);padding:1px 5px;border-radius:5px;font-size:12px}
   <div class="row"><button class="btn" id="afb" style="flex:1">Buy &amp; log it</button><button class="btn g" id="afw" style="flex:1">Wait 24h</button><button class="btn ok" id="afs" style="flex:1">Skip it</button></div>
 </div></dialog>
 
+<!-- CHOICE DIALOG -->
+<dialog id="dq"><div class="sheet stack">
+  <h2 id="dqT"></h2>
+  <div id="dqB" class="res"></div>
+  <div id="dqA" class="row"></div>
+</div></dialog>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -273,8 +355,8 @@ code{background:var(--in);padding:1px 5px;border-radius:5px;font-size:12px}
 const KEY="moneywise_v1",DKEY="moneywise_device",$=id=>document.getElementById(id);
 const P=["#0d9488","#f59e0b","#6366f1","#ef4444","#06b6d4","#a855f7","#ec4899","#84cc16","#f97316","#64748b"],IC={bad:"🔴",warn:"🟠",info:"🔵",ok:"🟢"};
 const DEF={transactions:[],categories:{expense:[{name:"Rent",cls:"need"},{name:"Groceries",cls:"need"},{name:"Utilities",cls:"need"},{name:"Transport",cls:"need"},{name:"Health",cls:"need"},{name:"Food & Dining",cls:"want"},{name:"Entertainment",cls:"want"},{name:"Shopping",cls:"want"},{name:"Subscriptions",cls:"want"},{name:"Others",cls:"want"}],income:[{name:"Salary"},{name:"Freelance"},{name:"Investments"},{name:"Other Income"}]},
-  bills:[],budgets:{},cardPays:[],recurring:[],goals:[],wishlist:[],settings:{theme:"auto",income:0,target:10,step:1,cardOpen:0,cardCap:0,period:"day"},prefsAt:0};
-const COLS=["transactions","bills","cardPays","recurring","goals","wishlist"];
+  bills:[],budgets:{},cardPays:[],recurring:[],goals:[],wishlist:[],noSpend:[],cards:[],settings:{theme:"auto",income:0,target:10,step:1,cardOpen:0,cardCap:0,period:"day",cardRate:3.5,efMonths:3},prefsAt:0};
+const COLS=["transactions","bills","cardPays","recurring","goals","wishlist","noSpend","cards"];
 
 const pad=n=>String(n).padStart(2,"0"),mk=d=>d.getFullYear()+"-"+pad(d.getMonth()+1),cm=()=>mk(new Date());
 const ym=k=>k.split("-").map(Number),addM=(k,n)=>{const[y,m]=ym(k);return mk(new Date(y,m-1+n,1))},pm=k=>addM(k,-1);
@@ -288,7 +370,12 @@ const fmx=n=>"₹"+Number(n||0).toLocaleString("en-IN",{maximumFractionDigits:2}
 const f1=x=>+(+x).toFixed(1),uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const mname=k=>{const[y,m]=ym(k);return new Date(y,m-1,1).toLocaleString("en-IN",{month:"long",year:"numeric"})};
 const mshort=k=>{const[y,m]=ym(k);return new Date(y,m-1,1).toLocaleString("en-IN",{month:"short"})};
-const dshort=s=>new Date(s+"T00:00:00").toLocaleString("en-IN",{day:"numeric",month:"short"});
+/* all dates on screen are DD-MM-YYYY */
+const fdate=s=>s?s.slice(8,10)+"-"+s.slice(5,7)+"-"+s.slice(0,4):"";
+const isoOf=d=>mk(d)+"-"+pad(d.getDate());
+const fts=ms=>{const d=new Date(ms);return fdate(isoOf(d))+" "+d.toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"})};
+const addD=(s,n)=>{const d=new Date(s+"T00:00:00");d.setDate(d.getDate()+n);return isoOf(d)};
+const dshort=fdate;
 const upd=o=>(o.updatedAt=Date.now(),o),live=a=>a.filter(x=>!x.deleted),kill=o=>{o.deleted=true;upd(o)};
 
 function norm(s){
@@ -297,11 +384,19 @@ function norm(s){
   d.settings=Object.assign({},DEF.settings,d.settings);d.settings.base=d.settings.base||cm();
   COLS.forEach(k=>{if(!Array.isArray(d[k]))d[k]=[]});d.budgets=d.budgets||{};
   d.bills.forEach(b=>{if(b.type==="recurring"){b.paidMonths=b.paidMonths||[];b.every=b.every||1;b.start=b.start||cm()}});
+  d.goals.forEach(g=>{g.kind=g.kind||"save";if(g.kind==="invest")g.vh=g.vh||[]});
+  /* data from before cards were separate: everything on "the card" becomes the first card */
+  if(!d.cards.length&&(+d.settings.cardOpen>0||d.cardPays.length||d.transactions.some(t=>t.card&&!t.deleted)||d.bills.some(b=>b.card&&!b.deleted)))
+    d.cards.push({id:"card1",name:"Credit card",last4:"",limit:0,open:+d.settings.cardOpen||0,updatedAt:1});
+  d.bills.forEach(b=>{if(b.type==="recurring"&&!b.from)b.from=cm()});d.recurring.forEach(r=>{if(!r.from)r.from=cm()});
   return d;
 }
 function load(){try{return norm(JSON.parse(localStorage.getItem(KEY)))}catch(e){return norm(null)}}
-function loadDev(){let d={};try{d=JSON.parse(localStorage.getItem(DKEY))||{}}catch(e){}return Object.assign({clientId:"",syncOn:false,lastSync:0,lastBackup:0,notified:""},d)}
+function loadDev(){let d={};try{d=JSON.parse(localStorage.getItem(DKEY))||{}}catch(e){}return Object.assign({clientId:"",syncOn:false,lastSync:0,lastBackup:0,notified:"",sweep:"",wk:"",wkN:"",efHide:false,rmode:"week",anim:true},d)}
 let S=load(),DEV=loadDev();
+/* daily check starts from Settings → "Track every day from"; until that's set, from the day this version was first opened on this device */
+if(!DEV.since){DEV.since=today();try{localStorage.setItem(DKEY,JSON.stringify(DEV))}catch(e){}}
+const startDate=()=>S.settings.startDate||DEV.since;
 const saveDev=()=>{try{localStorage.setItem(DKEY,JSON.stringify(DEV))}catch(e){}};
 function save(prefs){if(prefs)S.prefsAt=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast("Couldn't save on this device")}queueSync()}
 
@@ -314,9 +409,19 @@ const byCat=k=>{const m={};txm(k).forEach(t=>{if(t.type==="expense")m[t.category
 const cls=n=>(S.categories.expense.find(c=>c.name===n)||{cls:"want"}).cls;
 const need=k=>txm(k).filter(t=>t.type==="expense"&&cls(t.category)==="need").reduce((a,t)=>a+ +t.amount,0);
 const fixedTx=t=>!!(t.billId||t.recId);
-const cardDue=()=>S.settings.cardOpen+TX().filter(t=>t.card&&t.type==="expense").reduce((a,t)=>a+ +t.amount,0)-live(S.cardPays).reduce((a,p)=>a+ +p.amount,0);
-const cardMonth=k=>txm(k).filter(t=>t.card&&t.type==="expense").reduce((a,t)=>a+ +t.amount,0);
-const bAmt=b=>b.card?Math.max(0,cardDue()):+b.amount;
+/* credit cards: each card has its own dues; old entries without a card belong to the first card */
+const CARDS=()=>live(S.cards);
+const defCard=()=>(CARDS()[0]||{id:"card1"}).id;
+const cidOf=x=>x.cardId||defCard();
+const cardName=id=>(S.cards.find(c=>c.id===id)||{name:"Credit card"}).name;
+function ensureCard(id){if(!id)return;const c=S.cards.find(x=>x.id===id);if(c){if(c.deleted){c.deleted=false;upd(c)}}else S.cards.push(upd({id,name:"Credit card",last4:"",limit:0,open:0}))}
+const cardSpent=(cid,upto)=>TX().filter(t=>t.card&&t.type==="expense"&&(!cid||cidOf(t)===cid)&&(!upto||t.date<=upto)).reduce((a,t)=>a+ +t.amount,0);
+const cardPaid=(cid,upto)=>live(S.cardPays).filter(p=>(!cid||cidOf(p)===cid)&&(!upto||p.date<=upto)).reduce((a,p)=>a+ +p.amount,0);
+const cardOpen=cid=>CARDS().filter(c=>!cid||c.id===cid).reduce((a,c)=>a+(+c.open||0),0);
+const cardDue=cid=>cardOpen(cid)+cardSpent(cid)-cardPaid(cid);
+const cardMonth=(k,cid)=>txm(k).filter(t=>t.card&&t.type==="expense"&&(!cid||cidOf(t)===cid)).reduce((a,t)=>a+ +t.amount,0);
+const bAmt=b=>b.card?Math.max(0,cardDue(cidOf(b))):+b.amount;
+const cardBill=cid=>live(S.bills).find(b=>b.card&&cidOf(b)===cid);
 const incOf=k=>{const a=sums(k).inc;return a>0?a:(k===cm()?S.settings.income:0)};
 function toast(m,ms){const t=$("toast");t.innerHTML=m;t.classList.add("show");clearTimeout(t.h);t.h=setTimeout(()=>t.classList.remove("show"),ms||2200)}
 
@@ -348,17 +453,51 @@ function runRec(){
     for(let k=R.start.slice(0,7),i=0;k<=c&&i<240;k=addM(k,R.every||1),i++){
       const d=dk(k,R.day);if(d<R.start||d>t)continue;const id=recTid(R,k);
       if(S.transactions.some(x=>x.id===id))continue;
-      S.transactions.push(upd({id,type:R.type,amount:+R.amount,category:R.type==="saving"?"Savings":R.category,note:R.note||"",card:!!R.card,goalId:R.goalId||"",date:d,recId:R.id,recKey:k}));n++}});
+      S.transactions.push(upd({id,type:R.type,amount:+R.amount,category:R.type==="saving"?"Savings":R.category,note:R.note||"",card:!!R.card,cardId:R.card?R.cardId||"":"",goalId:R.goalId||"",date:d,recId:R.id,recKey:k}));n++}});
   if(n)save();return n;
 }
 function recNext(R){if(R.active===false)return null;const t=today();for(let k=R.start.slice(0,7),i=0;i<240;k=addM(k,R.every||1),i++){const d=dk(k,R.day);if(d>=R.start&&d>t)return d}return null}
 
 /* money that is already spoken for this month: bills, repeating expenses */
+/* payments that come every few months (LIC premium, insurance, fees): a share is kept aside every month,
+   so the month it falls due doesn't wreck the spending limit */
+const isSpreadB=b=>!b.card&&b.type==="recurring"&&(b.every||1)>1;
+const isSpreadR=R=>R.active!==false&&(R.every||1)>1&&R.type!=="income";
+function spreadAmt(amount,ev,start,from,k){
+  const lo=addM(start,-(ev-1));if(!from||from<lo)from=lo;if(k<from)return 0;
+  const share=amount/ev,off=((mdiff(start,k)%ev)+ev)%ev;
+  if(off||k<start)return share;
+  return amount-Math.min(ev-1,mdiff(from,k))*share;
+}
+function heldList(){
+  const k=cm(),L=[],add=(name,amount,ev,start,from,kind)=>{const lo=addM(start,-(ev-1));if(!from||from<lo)from=lo;if(k<from)return;
+    const off=((mdiff(start,k)%ev)+ev)%ev,cnt=Math.min(off||ev,mdiff(from,k)+1);
+    L.push({name,amount,ev,share:amount/ev,held:Math.min(amount,cnt*amount/ev),nextK:off?addM(k,ev-off):k,kind})};
+  live(S.bills).filter(isSpreadB).forEach(b=>add(b.name,+b.amount,b.every,b.start,b.from,"bill"));
+  live(S.recurring).filter(isSpreadR).forEach(R=>add(R.note||R.category,+R.amount,R.every,R.start.slice(0,7),R.from,R.type));
+  return L;
+}
+/* savings made every few months count towards the monthly savings target one share at a time */
+function spreadSav(k){
+  let share=0,posted=0;const ids=new Set();
+  live(S.recurring).forEach(R=>{if(R.type==="saving"&&isSpreadR(R)){ids.add(R.id);share+=spreadAmt(+R.amount,R.every,R.start.slice(0,7),R.from,k)}});
+  txm(k).forEach(t=>{if(t.type==="saving"&&t.recId&&ids.has(t.recId))posted+=sv(t)});
+  return{share,posted};
+}
+/* share kept aside in month k that hasn't actually been paid out in k */
+function reserveGap(k){
+  let share=0,paid=0;const sb=new Set(),sr=new Set();
+  live(S.bills).filter(isSpreadB).forEach(b=>{sb.add(b.id);share+=spreadAmt(+b.amount,b.every,b.start,b.from,k)});
+  live(S.recurring).filter(isSpreadR).forEach(R=>{sr.add(R.id);share+=spreadAmt(+R.amount,R.every,R.start.slice(0,7),R.from,k)});
+  txm(k).forEach(t=>{if((t.billId&&sb.has(t.billId))||(t.recId&&sr.has(t.recId)))paid+=t.type==="saving"?sv(t):+t.amount});
+  return Math.max(0,share-paid);
+}
 function fixedFor(k){
-  let r=0;
-  txm(k).forEach(t=>{if(t.type==="expense"&&fixedTx(t))r+= +t.amount});
-  live(S.bills).forEach(b=>{if(b.card)return;occs(b).forEach(o=>{if(!o.paid&&o.k<=k)r+= +b.amount})});
-  live(S.recurring).forEach(R=>{if(R.type==="expense"&&recOn(R,k)&&!S.transactions.some(t=>t.id===recTid(R,k)))r+= +R.amount});
+  let r=0;const sb=new Set(live(S.bills).filter(isSpreadB).map(b=>b.id)),sr=new Set(live(S.recurring).filter(R=>R.type==="expense"&&isSpreadR(R)).map(R=>R.id));
+  txm(k).forEach(t=>{if(t.type==="expense"&&fixedTx(t)&&!sb.has(t.billId)&&!sr.has(t.recId))r+= +t.amount});
+  live(S.bills).forEach(b=>{if(b.card)return;if(isSpreadB(b)){r+=spreadAmt(+b.amount,b.every,b.start,b.from,k);return}occs(b).forEach(o=>{if(!o.paid&&o.k<=k)r+= +b.amount})});
+  live(S.recurring).forEach(R=>{if(R.type!=="expense")return;if(isSpreadR(R)){r+=spreadAmt(+R.amount,R.every,R.start.slice(0,7),R.from,k);return}
+    if(recOn(R,k)&&!S.transactions.some(t=>t.id===recTid(R,k)))r+= +R.amount});
   return r;
 }
 function target(k){const s=S.settings,[a,b]=ym(s.base),[c,d]=ym(k);return Math.min(60,Math.max(0,s.target+s.step*Math.max(0,(c-a)*12+d-b)))}
@@ -373,11 +512,116 @@ function plan(){
   const first=TX().filter(t=>t.type==="expense").map(t=>t.date).sort()[0]||today(),d0=first.startsWith(k)?+first.slice(8):first<k?1:dom;
   let streak=0;for(let d=dom-1;d>=d0;d--){const sb=ev.filter(t=>+t.date.slice(8)<d).reduce((a,t)=>a+ +t.amount,0);if(day(d)<=(lim-sb)/(D-d+1)+0.5)streak++;else break}
   if(streak&&tdy<=allow)streak++;
-  const goal=inc*tg/100,aside=sums(k).aside,projSave=inc-fixed-proj;
-  return{inc,tg,fixed,lim,disc,tdy,days,dom,D,allow,left:allow-tdy,proj,allowW,spentW,leftW:allowW-spentW,weDays:we-dom+1,streak,goal,aside,projSave};
+  const ss=spreadSav(k),goal=inc*tg/100,aside=sums(k).aside-ss.posted+ss.share,projSave=inc-fixed-proj;
+  return{inc,tg,fixed,lim,disc,tdy,days,dom,D,allow,left:allow-tdy,proj,allowW,spentW,leftW:allowW-spentW,weDays:we-dom+1,streak,goal,aside,spShare:ss.share,projSave};
 }
-function goalSaved(g){return TX().filter(t=>t.type==="saving"&&t.goalId===g.id).reduce((a,t)=>a+sv(t),0)}
 const wishReady=w=>Date.now()-w.addedAt>=864e5;
+
+/* goals: savings, emergency fund, investments */
+const isInv=g=>!!g&&g.kind==="invest",isEF=g=>!!g&&g.kind==="ef";
+const goalOf=id=>id?S.goals.find(g=>g.id===id&&!g.deleted):null;
+const invested=(g,upto)=>TX().filter(t=>t.type==="saving"&&t.goalId===g.id&&(!upto||t.date<=upto)).reduce((a,t)=>a+sv(t),0);
+const goalSaved=g=>invested(g);
+function gValue(g,upto){upto=upto||today();const inv=invested(g,upto);if(!isInv(g))return inv;
+  const h=(g.vh||[]).filter(x=>x.d<=upto).sort((a,b)=>a.d.localeCompare(b.d)).pop();return h?h.v+inv-invested(g,h.d):inv}
+const lastVal=g=>(g.vh||[]).slice().sort((a,b)=>a.d.localeCompare(b.d)).pop();
+/* average essential ("need") spending per month: last 3 months with data, else this month's pace */
+function avgNeeds(){
+  const c=cm();let t=0,n=0;
+  for(let i=1;i<=3;i++){const k=addM(c,-i);if(sums(k).exp>0){t+=need(k);n++}}
+  if(n&&t>0)return t/n;
+  const d=new Date().getDate(),nd=need(c);if(nd>0)return nd/d*dim(c);
+  return S.settings.income?S.settings.income*.5:0;
+}
+const efMonths=()=>S.settings.efMonths||3;
+const efAuto=()=>Math.max(1000,Math.round(avgNeeds()*efMonths()/1000)*1000);
+const gTarget=g=>isEF(g)&&g.auto?efAuto():+g.target||0;
+const efGoal=()=>live(S.goals).find(isEF);
+
+/* credit card */
+const cardDueAt=upto=>cardOpen()+cardSpent(null,upto)-cardPaid(null,upto);
+function cardStreak(cid){
+  const L=live(S.cardPays).filter(p=>!cid||cidOf(p)===cid).sort((a,b)=>b.date.localeCompare(a.date)||(b.updatedAt||0)-(a.updatedAt||0));let n=0;
+  for(const p of L){if(p.full===false)break;if(p.full)n++}
+  return{n,lastPartial:!!L[0]&&L[0].full===false};
+}
+const carrying=()=>CARDS().filter(c=>cardStreak(c.id).lastPartial&&cardDue(c.id)>0);
+const cardRate=()=>S.settings.cardRate==null?3.5:+S.settings.cardRate;
+
+/* net worth that the app can see: money put aside + investments − card dues */
+function netWorth(upto){
+  upto=upto||today();
+  const sav=TX().filter(t=>t.type==="saving"&&t.date<=upto&&!isInv(goalOf(t.goalId))).reduce((a,t)=>a+sv(t),0);
+  const inv=live(S.goals).filter(isInv).reduce((a,g)=>a+gValue(g,upto),0),card=Math.max(0,cardDueAt(upto));
+  return{sav,inv,card,nw:sav+inv-card};
+}
+const monthEnd=k=>k===cm()?today():dk(k,31);
+
+/* spending leaks and likely subscriptions, from your notes over the last 90 days */
+function leaks(){
+  const from=addD(today(),-90),m={};
+  TX().filter(t=>t.type==="expense"&&!fixedTx(t)&&t.note&&t.date>=from&&t.date<=today()).forEach(t=>{
+    const k=t.note.trim().toLowerCase();if(!k)return;
+    const o=m[k]=m[k]||{note:t.note.trim(),cat:t.category,c:0,s:0,months:new Set(),amts:[]};
+    o.c++;o.s+= +t.amount;o.months.add(t.date.slice(0,7));o.amts.push(+t.amount)});
+  const L=Object.values(m),med=a=>{const s=[...a].sort((x,y)=>x-y);return s[Math.floor(s.length/2)]};
+  const subs=L.filter(o=>o.months.size>=2&&o.c<=o.months.size+1&&o.amts.every(a=>Math.abs(a-med(o.amts))<=med(o.amts)*.1)).map(o=>({...o,mo:med(o.amts)}));
+  const sn=new Set(subs.map(o=>o.note.toLowerCase()));
+  const lk=L.filter(o=>o.c>=4&&!sn.has(o.note.toLowerCase())).map(o=>({...o,avg:o.s/o.c,yr:o.s/90*365})).sort((a,b)=>b.yr-a.yr).slice(0,5);
+  return{leaks:lk,subs:subs.sort((a,b)=>b.mo-a.mo).slice(0,5)};
+}
+/* category running hot vs your usual (everyday spending only) */
+const catEv=k=>{const m={};txm(k).forEach(t=>{if(t.type==="expense"&&!fixedTx(t))m[t.category]=(m[t.category]||0)+ +t.amount});return m};
+function usual(cat,k,fn){let t=0,n=0;for(let i=1;i<=3;i++){const m=addM(k,-i);if(sums(m).exp>0){t+=(fn(m)[cat]||0);n++}}return n?t/n:0}
+function spikes(){
+  const k=cm(),dom=new Date().getDate(),D=dim(k);if(dom<7)return[];
+  return Object.entries(catEv(k)).map(([c,v])=>{const u=usual(c,k,catEv),pace=v/dom*D;return{c,v,u,pace,pct:u?(pace/u-1)*100:0}})
+    .filter(x=>x.u>0&&x.v>=500&&x.pace>x.u*1.3).sort((a,b)=>b.pct-a.pct);
+}
+/* month-end sweep: money left over from last month that wasn't put aside */
+function sweepInfo(){
+  const c=cm(),pk=pm(c);if(new Date().getDate()>10||DEV.sweep===pk)return null;
+  const s=sums(pk);if(!s.inc)return null;const left=Math.floor(s.inc-s.exp-s.aside-reserveGap(pk));
+  return left>=100?{pk,left}:null;
+}
+/* daily noting: a day counts as noted if it has an expense you entered (not an automatic repeat) or is marked "no spending" */
+const WD=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],wday=s=>WD[new Date(s+"T00:00:00").getDay()];
+const isNoSpend=d=>live(S.noSpend).some(x=>x.date===d);
+function notedSet(){const s=new Set();TX().forEach(t=>{if(t.type==="expense"&&!t.recId)s.add(t.date)});live(S.noSpend).forEach(x=>s.add(x.date));return s}
+function missed(){
+  const st=startDate(),t=today(),from=st>addD(t,-60)?st:addD(t,-60),N=notedSet(),days=[];
+  for(let d=from;d<t;d=addD(d,1))if(!N.has(d))days.push(d);
+  return{st,days:days.reverse(),todayOpen:st<=t&&!N.has(t)};
+}
+function markNoSpend(dates){
+  dates.forEach(d=>{const id="ns_"+d,o=S.noSpend.find(x=>x.id===id);if(o)upd(Object.assign(o,{deleted:false}));else S.noSpend.push(upd({id,date:d}))});
+  save();render();
+}
+/* share a small summary with the service worker so it can send a reminder while the app is closed (Android, installed app) */
+function shareMeta(){
+  if(!("caches" in window))return;const N=notedSet(),t=today(),rec=[];
+  for(let i=0;i<=14;i++){const d=addD(t,-i);if(N.has(d))rec.push(d)}
+  caches.open("kudukka-meta").then(c=>c.put("meta",new Response(JSON.stringify({start:startDate(),noted:rec,at:Date.now()})))).catch(()=>{});
+}
+async function setupDaily(){
+  try{if(Notification.permission!=="granted")return false;const r=await navigator.serviceWorker.ready;if(!("periodicSync" in r))return false;
+    const st=await navigator.permissions.query({name:"periodic-background-sync"});if(st.state!=="granted")return false;
+    await r.periodicSync.register("kudukka-daily",{minInterval:6*3600*1000});return true}catch(e){return false}
+}
+
+/* weekly check-in for last Monday–Sunday, shown Monday to Wednesday */
+function weekInfo(){
+  const wd=(new Date().getDay()+6)%7;if(wd>2)return null;
+  const ws=addD(today(),-wd-7),we=addD(ws,6);if(DEV.wk===ws)return null;
+  const all=TX(),first=all.filter(t=>t.type==="expense").map(t=>t.date).sort()[0];if(!first||first>we)return null;
+  const ev=all.filter(t=>t.type==="expense"&&!fixedTx(t)&&t.date>=ws&&t.date<=we),spent=ev.reduce((a,t)=>a+ +t.amount,0);
+  const p=plan(),lim=p&&p.lim>0?p.lim/p.D*7:0;
+  let ns=0;for(let i=0;i<7;i++){const d=addD(ws,i);if(d>=first&&!ev.some(t=>t.date===d))ns++}
+  const bc={};ev.forEach(t=>bc[t.category]=(bc[t.category]||0)+ +t.amount);const ranked=Object.entries(bc).sort((a,b)=>b[1]-a[1]),top=ranked[0],topWant=ranked.find(x=>cls(x[0])==="want");
+  const nc={};ev.forEach(t=>{if(t.note){const k=t.note.trim().toLowerCase();nc[k]=nc[k]||{n:t.note.trim(),c:0,s:0};nc[k].c++;nc[k].s+= +t.amount}});
+  const often=Object.values(nc).filter(x=>x.c>=3).sort((a,b)=>b.s-a.s)[0];
+  return{ws,we,spent,lim,ns,top,topWant,often,n:ev.length};
+}
 
 function alerts(){
   const L=[],p=plan(),k=cm(),R={bad:0,warn:1,info:2,ok:3};
@@ -388,6 +632,10 @@ function alerts(){
   else if(S.settings.period!=="week"&&p.left<0) L.push({l:"warn",m:`You're over today's limit by <b>${fmt(-p.left)}</b>.`});
   else if(p.dom>=5&&p.proj>p.lim*1.05) L.push({l:"warn",m:`At this pace everyday spending reaches <b>${fmt(p.proj)}</b> against a plan of ${fmt(p.lim)}.`});
   live(S.bills).map(b=>({b,s:bst(b)})).filter(x=>!x.s.paid&&x.s.d<=3).sort((a,b)=>a.s.d-b.s.d).forEach(x=>L.push({l:x.s.d<0?"bad":"warn",m:`<b>${esc(x.b.name)}</b>: ${x.s.txt.toLowerCase()} · ${fmt(bAmt(x.b))}`}));
+  carrying().forEach(c=>{const cdue=cardDue(c.id);L.push({l:"bad",m:`<b>${esc(c.name)}</b> is carrying <b>${fmt(cdue)}</b>. At about ${cardRate()}% a month that costs roughly <b>${fmt(cdue*cardRate()/100)} a month</b> in interest. Clearing it beats any savings return.`})});
+  CARDS().forEach(c=>{const cdue=cardDue(c.id);if(c.limit>0&&cdue>=c.limit*.8)L.push({l:"warn",m:`<b>${esc(c.name)}</b> is using ${(cdue/c.limit*100).toFixed(0)}% of its ${fmt(c.limit)} limit.`})});
+  const sp=spikes()[0];
+  if(sp) L.push({l:"warn",m:`<b>${esc(sp.c)}</b> is on pace for <b>${fmt(sp.pace)}</b> this month. You usually spend about ${fmt(sp.u)} (${fmt(sp.v)} so far).`});
   const cap=S.settings.cardCap,cs=cardMonth(k);
   if(cap>0&&cs>cap) L.push({l:"bad",m:`Credit card spending is <b>${fmt(cs-cap)}</b> over your ${fmt(cap)} cap this month.`});
   else if(cap>0&&cs>=cap*.8) L.push({l:"warn",m:`Credit card spending is at ${(cs/cap*100).toFixed(0)}% of your cap (${fmt(cs)} of ${fmt(cap)}).`});
@@ -398,7 +646,7 @@ function alerts(){
   const wr=live(S.wishlist).filter(w=>w.status==="waiting"&&wishReady(w)).length;
   if(wr) L.push({l:"info",m:`${wr} wishlist item${wr>1?"s are":" is"} ready to decide. Still want ${wr>1?"them":"it"}? <b>Plan → Wishlist</b>`});
   if(!DEV.syncOn&&S.transactions.length>5&&Date.now()-DEV.lastBackup>7*864e5) L.push({l:"info",m:"No backup in over a week. Your data lives only on this phone. Export a backup or connect Google Drive in <b>Settings ⚙️</b>."});
-  if(!L.length) L.push({l:"ok",m:"On track. Nothing needs your attention right now."});
+  if(!L.length&&!missed().days.length) L.push({l:"ok",m:"On track. Nothing needs your attention right now."});
   return L.sort((a,b)=>R[a.l]-R[b.l]).slice(0,6);
 }
 
@@ -410,6 +658,9 @@ function fill(){
   $("rc").innerHTML=opt(S.categories[rType==="income"?"income":"expense"],$("rc").value);
   const gs='<option value="">General savings</option>'+live(S.goals).map(g=>`<option value="${g.id}">${esc(g.name)}</option>`).join("");
   ["sg","rg"].forEach(i=>{const v=$(i).value;$(i).innerHTML=gs;$(i).value=v});
+  const co=(CARDS().length?CARDS():[{id:"card1",name:"Credit card"}]).map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("");
+  {const v=$("rk").value;$("rk").innerHTML='<option value="">Cash / UPI / bank</option>'+co;$("rk").value=v}
+  {const v=$("bcd").value;$("bcd").innerHTML=co;$("bcd").value=v||defCard()}
   const v=$("tf").value;$("tf").innerHTML='<option value="">All categories</option>'+opt(S.categories.expense.concat(S.categories.income,[{name:"Savings"}]),v);
 }
 const stats=(s,q)=>[["Income",s.inc,q.inc],["Expenses",s.exp,q.exp],["Net saved",s.sav,q.sav]].map(([l,v,o])=>`<div class="card"><span class="m sm">${l}</span><b>${fmt(v)}</b><span class="m sm">${o?(v>=o?"+":"−")+fmt(Math.abs(v-o))+" vs last month":"no data last month"}</span></div>`).join("");
@@ -425,28 +676,92 @@ const barH=(pc,col)=>`<div class="bar"><i style="width:${Math.max(0,Math.min(100
 function home(){
   const k=cm(),s=sums(k),q=sums(pm(k)),p=plan();$("mon").textContent=mname(k);
   $("al").innerHTML=alerts().map(a=>`<div class="alert ${a.l}"><span>${IC[a.l]}</span><span>${a.m}</span></div>`).join("");
-  let h;
+  let h,heroV=null;
   if(p){
     const wk=S.settings.period==="week",lim=wk?p.allowW:p.allow,spent=wk?p.spentW:p.tdy,left=wk?p.leftW:p.left;
     const pc=lim>0?spent/lim*100:100,col=left<0?"var(--r)":pc>80?"var(--a)":"var(--g)",nx=target(addM(k,1)),need=Math.max(0,p.goal-p.aside);
+    heroV=left;
     h=`<div class="card"><h3>Left to spend ${wk?"this week":"today"}</h3><div class="big" style="color:${left<0?"var(--r)":"inherit"}">${fmt(left)}</div>${barH(pc,col)}
       <div class="m sm">${wk?`Week limit ${fmt(Math.max(0,lim))} · spent ${fmt(spent)} · ${p.weDays} day${p.weDays>1?"s":""} left this week`:`Daily limit ${fmt(Math.max(0,lim))} · spent today ${fmt(spent)} · ${p.days} days left`}</div>
       ${p.streak>=2?`<div class="sm" style="margin-top:6px">🔥 <b>${p.streak} days</b> in a row within your limit</div>`:""}
       <button class="btn g w" id="afo" style="margin-top:12px">🤔 Can I afford this?</button></div>
     <div class="card"><h3>Savings target ${f1(p.tg)}% · ${fmt(p.goal)}</h3>
       <div class="sm">Put aside so far <b>${fmt(p.aside)}</b></div>${barH(p.goal>0?p.aside/p.goal*100:0,"var(--ac)")}
+      ${p.spShare>0?`<div class="m sm">Includes ${fmt(p.spShare)} this month for savings you pay every few months</div>`:""}
       <div class="sm">At this pace you'll have <b class="${p.projSave>=p.goal?"up":"out"}">${fmt(p.projSave)}</b> left at month end</div>
       <div class="m sm" style="margin-top:4px">Next month's target ${f1(nx)}%</div>
       ${need>0?`<button class="btn w" id="pya" style="margin-top:12px" data-n="${Math.round(need)}">Put aside ${fmt(need)} now</button>`:`<div class="sm up" style="margin-top:10px">✅ Target put aside this month</div>`}</div>`;
   } else h='<div class="card" style="grid-column:1/-1"><h3>Spending limit</h3><div class="m">Add your expected monthly income and savings target in Settings ⚙️ to see how much you can spend.</div></div>';
   $("hero").innerHTML=h;$("sts").innerHTML=stats(s,q);
-  const cd=cardDue(),cs=cardMonth(k),cap=S.settings.cardCap;
-  $("ccard").innerHTML=cd>0||cap>0||live(S.cardPays).length||TX().some(t=>t.card)?`<div class="card"><h3>Credit card</h3>
-    <div class="li" style="border:0;padding:0"><span>Spent on card this month</span><b>${fmt(cs)}${cap>0?` <span class="m sm">of ${fmt(cap)}</span>`:""}</b></div>
+  if(heroV!=null)countUp($("hero").querySelector(".big"),"hero",Math.round(heroV));
+  /* missed days */
+  const ms=missed(),late=new Date().getHours()>=20;
+  const dayRow=(d,lbl)=>`<div class="li"><span><b>${lbl||wday(d)+" "+fdate(d)}</b></span><span class="row" style="gap:6px;flex-wrap:nowrap"><button class="btn s" data-a="msadd" data-id="${d}">+ Add</button><button class="btn g s" data-a="msno" data-id="${d}">No spending</button></span></div>`;
+  if(ms.st>today())$("msd").innerHTML=`<div class="card"><h3>📅 Daily tracking starts ${wday(ms.st)} ${fdate(ms.st)}</h3><div class="sm m">From that day Kudukka checks that every day has been noted. If you spent nothing on a day, just tap <b>No spending</b>.</div></div>`;
+  else if(ms.days.length){const sh10=ms.days.slice(0,10),more=ms.days.length-sh10.length;
+    $("msd").innerHTML=`<div class="card" style="border-left:4px solid var(--a)"><h3>📝 ${ms.days.length===1?"1 day":ms.days.length+" days"} with nothing noted</h3>
+      <div class="sm m" style="margin-bottom:4px">Add what you spent, or mark the day as no spending.</div>
+      ${sh10.map(d=>dayRow(d,d===addD(today(),-1)?"Yesterday · "+fdate(d):"")).join("")}
+      ${more>0?`<div class="m sm" style="padding-top:8px">…and ${more} earlier day${more>1?"s":""} back to ${fdate(ms.days[ms.days.length-1])}</div>`:""}
+      ${ms.days.length>1?`<button class="btn g w" data-a="msall" style="margin-top:10px">No spending on all ${ms.days.length} days</button>`:""}</div>`}
+  else if(late&&ms.todayOpen)$("msd").innerHTML=`<div class="card" style="border-left:4px solid var(--ac)"><h3>🌙 Nothing noted today yet</h3>${dayRow(today(),"Today · "+fdate(today()))}</div>`;
+  else $("msd").innerHTML="";
+  shareMeta();
+  /* month-end sweep */
+  const sw=sweepInfo();
+  $("swp").innerHTML=sw?`<div class="card" style="border-left:4px solid var(--g)"><h3>🧹 ${mname(sw.pk)} closed with ${fmt(sw.left)} unspent</h3>
+    <div class="sm">Move it to a goal now, before it quietly gets spent this month.</div>
+    <div class="row" style="margin-top:12px"><button class="btn ok" data-a="swput" data-id="${sw.pk}" data-n="${sw.left}" style="flex:1">Put aside ${fmt(sw.left)}</button><button class="btn g" data-a="swno" data-id="${sw.pk}">Not now</button></div></div>`:"";
+  /* weekly check-in */
+  const w=weekInfo();
+  if(w){
+    const under=w.lim?w.lim-w.spent:0,tip=!w.lim?"Set your income in Settings to get a weekly limit."
+      :under>=0?`You stayed ${fmt(under)} under. Put it aside so it counts.`
+      :w.topWant?`Over by ${fmt(-under)}. The easiest place to cut is ${esc(w.topWant[0])} (${fmt(w.topWant[1])}). Try keeping it under ${fmt(w.topWant[1]*.7)} this week.`:`Over by ${fmt(-under)}, mostly on essentials. Check whether any of it was a one-off.`;
+    $("wkc").innerHTML=`<div class="card" style="border-left:4px solid var(--ac)"><h3>📋 Your week · ${fdate(w.ws)} to ${fdate(w.we)}</h3>
+      <div class="li"><span>Everyday spending</span><b class="${w.lim&&w.spent>w.lim?"out":""}">${fmt(w.spent)}${w.lim?` <span class="m sm">of ${fmt(w.lim)}</span>`:""}</b></div>
+      <div class="li"><span>No-spend days</span><b>${w.ns} of 7</b></div>
+      ${w.top?`<div class="li"><span>Biggest category</span><span>${esc(w.top[0])} · ${fmt(w.top[1])}</span></div>`:""}
+      ${w.often?`<div class="li"><span>Most frequent</span><span>${esc(w.often.n)} · ${w.often.c}× · ${fmt(w.often.s)}</span></div>`:""}
+      <div class="sm" style="margin-top:8px">💡 ${tip}</div>
+      <div class="row" style="margin-top:12px">${under>0?`<button class="btn ok" data-a="wkput" data-id="${w.ws}" data-n="${Math.floor(under)}" style="flex:1">Put aside ${fmt(under)}</button>`:""}<button class="btn g" data-a="wkrep" data-id="${w.ws}" style="flex:1">Full report</button><button class="btn g" data-a="wkok" data-id="${w.ws}" style="flex:1">Got it</button></div></div>`;
+  } else $("wkc").innerHTML="";
+  /* net worth */
+  const nw=netWorth(),nwp=netWorth(monthEnd(pm(k))),hasNW=TX().some(t=>t.type==="saving")||live(S.goals).some(isInv)||nw.card>0;
+  $("nwc").innerHTML=hasNW?`<div class="card"><h3>Net worth (tracked)</h3><div class="big" style="font-size:28px;color:${nw.nw<0?"var(--r)":"inherit"}">${fmt(nw.nw)}</div>
+    <div class="sm ${nw.nw>=nwp.nw?"up":"out"}">${nw.nw>=nwp.nw?"▲":"▼"} ${fmt(Math.abs(nw.nw-nwp.nw))} since end of ${mname(pm(k))}</div>
+    <div class="m sm" style="margin-top:6px">Saved ${fmt(nw.sav)} + investments ${fmt(nw.inv)} − card dues ${fmt(nw.card)}</div></div>`:"";
+  if(hasNW)countUp($("nwc").querySelector(".big"),"nw",Math.round(nw.nw));
+  /* credit cards */
+  const C=CARDS(),cd=cardDue(),cs=cardMonth(k),cap=S.settings.cardCap,cst=cardStreak(),carry=carrying();
+  $("ccard").innerHTML=C.length?`<div class="card"><h3>Credit card${C.length>1?"s":""}</h3>
+    ${C.length>1?C.map(c=>{const due=Math.max(0,cardDue(c.id)),u=c.limit>0?due/c.limit*100:0;
+      return `<div style="margin-bottom:10px"><div class="li" style="border:0;padding:0"><span><b>${esc(c.name)}</b>${c.last4?` <span class="m sm">••${esc(c.last4)}</span>`:""}</span><span>${fmt(due)} <span class="m sm">to repay</span></span></div>
+      ${c.limit>0?barH(u,u>=80?"var(--r)":u>=30?"var(--a)":"var(--g)"):""}<div class="m sm">This month ${fmt(cardMonth(k,c.id))}${c.limit>0?` · using ${u.toFixed(0)}% of ${fmt(c.limit)} limit`:""}</div></div>`}).join(""):""}
+    <div class="li" style="border:0;padding:0"><span>${C.length>1?"All cards this month":"Spent on card this month"}</span><b>${fmt(cs)}${cap>0?` <span class="m sm">of ${fmt(cap)}</span>`:""}</b></div>
     ${cap>0?barH(cs/cap*100,cs>cap?"var(--r)":cs>=cap*.8?"var(--a)":"var(--g)"):""}
-    <div class="li" style="border:0;padding:6px 0 0"><span class="m sm">To repay (not counted as spending again)</span><span>${fmt(Math.max(0,cd))}</span></div></div>`:"";
-  const G=live(S.goals);
-  $("hgoals").innerHTML=G.length?`<div class="card"><h3>Goals</h3>${G.map(g=>{const v=goalSaved(g);return `<div style="margin-bottom:8px"><div class="li" style="border:0;padding:0"><span>${esc(g.name)}</span><span class="sm">${fmt(v)} / ${fmt(g.target)}</span></div>${barH(v/g.target*100,"var(--ac)")}</div>`}).join("")}</div>`:"";
+    <div class="li" style="border:0;padding:6px 0 0"><span class="m sm">${C.length>1?"Total to repay":"To repay"} (not counted as spending again)</span><span>${fmt(Math.max(0,cd))}</span></div>
+    ${carry.length?carry.map(c=>{const due=cardDue(c.id);return `<div class="res bad" style="margin-top:10px">${C.length>1?"<b>"+esc(c.name)+"</b>: last":"Last"} payment was partial. ${fmt(due)} is costing about <b>${fmt(due*cardRate()/100)} a month</b> in interest.</div>`}).join("")
+      :cst.n>=1?`<div class="sm up" style="margin-top:8px">✅ Paid in full ${cst.n} time${cst.n>1?"s":""} in a row${cst.n>=3?" 🔥":""}</div>`:""}</div>`:"";
+  /* money held for payments that come every few months */
+  const HL=heldList();
+  $("rsv").innerHTML=HL.length?`<div class="card"><h3>🗓️ Kept aside for big payments</h3>
+    ${HL.map(x=>`<div class="li"><span><b>${esc(x.name)}</b><br><span class="m sm">${fmt(x.amount)} every ${x.ev} months · next ${x.nextK.slice(5)}-${x.nextK.slice(0,4)}</span></span><span>${fmt(x.share)}/month<br><span class="m sm">${fmt(x.held)} should be ready</span></span></div>`).join("")}
+    <div class="m sm" style="margin-top:6px">This is already taken out of your spending limit, so the month it falls due feels like any other. Leave it in your account.</div></div>`:"";
+  /* emergency fund */
+  const ef=efGoal(),an=avgNeeds();
+  if(ef){const v=goalSaved(ef),t=gTarget(ef),wks=an>0?v/(an/4.345):0;
+    $("efc").innerHTML=`<div class="card"><h3>🛟 ${esc(ef.name)}</h3>
+      <div class="li" style="border:0;padding:0"><span>Covers ${wks<1?"<b>less than a week</b>":`about <b>${wks.toFixed(wks<10?1:0)} weeks</b>`} of essentials</span><span class="sm">${fmt(v)} / ${fmt(t)}</span></div>
+      ${barH(t?v/t*100:0,v>=t?"var(--g)":"var(--ac)")}
+      <div class="m sm">${v>=t?"✅ Fully funded. Surprises won't go on the card.":`Target is ${ef.auto?efMonths()+" months of your essential spending":"your own amount"}. Use this, not the credit card, for surprises.`}</div>
+      ${v<t?`<button class="btn w" data-a="gadd" data-id="${ef.id}" style="margin-top:10px">+ Add to emergency fund</button>`:""}</div>`;
+  } else $("efc").innerHTML=!DEV.efHide&&TX().length>=5?`<div class="card"><h3>🛟 No emergency fund yet</h3>
+    <div class="sm">${an>0?`${efMonths()} months of your essentials is about <b>${fmt(efAuto())}</b>. `:""}A small cushion stops surprise costs from landing on the credit card.</div>
+    <div class="row" style="margin-top:12px"><button class="btn" data-a="efnew" style="flex:1">Start one</button><button class="btn g" data-a="efhide">Hide</button></div></div>`:"";
+  const G=live(S.goals).filter(g=>!isEF(g));
+  $("hgoals").innerHTML=G.length?`<div class="card"><h3>Goals</h3>${G.map(g=>{const inv=isInv(g),v=inv?gValue(g):goalSaved(g),t=gTarget(g);
+    return `<div style="margin-bottom:8px"><div class="li" style="border:0;padding:0"><span>${inv?"📈 ":""}${esc(g.name)}</span><span class="sm">${fmt(v)}${t?" / "+fmt(t):""}</span></div>${t?barH(v/t*100,"var(--ac)"):""}</div>`}).join("")}</div>`:"";
   $("dn").innerHTML=donut(k);
   const due=live(S.bills).map(b=>({b,s:bst(b)})).filter(x=>!x.s.paid&&x.s.d<=7).sort((a,b)=>a.s.d-b.s.d);
   $("db").innerHTML=due.length?due.map(x=>`<div class="li"><span><b>${esc(x.b.name)}</b> <span class="${x.s.c} sm">${x.s.txt}</span></span><span>${fmt(bAmt(x.b))} <button class="btn ok s" data-a="pay" data-id="${x.b.id}">Paid</button></span></div>`).join(""):'<div class="m sm">Nothing due in the next 7 days.</div>';
@@ -460,7 +775,7 @@ function txl(){
   $("ttot").innerHTML=l.length?`${l.length} entr${l.length>1?"ies":"y"} · spent <b class="out">${fmt(e)}</b>${i?` · income <b class="up">${fmt(i)}</b>`:""}${s?` · put aside <b class="ac">${fmt(s)}</b>`:""}`:"";
   const gname=id=>(S.goals.find(g=>g.id===id)||{name:"General savings"}).name;
   $("tl").innerHTML=l.length?l.map(t=>{const sign=t.type==="income"?"+":t.type==="saving"?(t.wd?"↩":"→"):"−",c=t.type==="income"?"up":t.type==="saving"?"ac":"out";
-    return `<div class="li"><span><b>${esc(t.type==="saving"?(t.wd?"From ":"To ")+gname(t.goalId):t.category)}</b><br><span class="m sm">${t.date.slice(8)}/${t.date.slice(5,7)} ${t.card?'<span class="tag">card</span> ':""}${t.recId?'<span class="tag">repeat</span> ':""}${t.billId?'<span class="tag">bill</span> ':""}${esc(t.note||"")}</span></span>
+    return `<div class="li"><span><b>${esc(t.type==="saving"?(t.wd?"From ":"To ")+gname(t.goalId):t.category)}</b><br><span class="m sm">${fdate(t.date)} ${t.card?`<span class="tag">💳 ${esc(cardName(cidOf(t)))}</span> `:""}${t.recId?'<span class="tag">repeat</span> ':""}${t.billId?'<span class="tag">bill</span> ':""}${esc(t.note||"")}</span></span>
     <span><span class="${c}">${sign}${fmx(t.amount)}</span><br><button class="btn g s" data-a="edit" data-id="${t.id}">Edit</button> <button class="btn r s" data-a="del" data-id="${t.id}">Delete</button></span></div>`}).join(""):'<div class="m sm">No entries for this filter.</div>';
 }
 const evTxt=e=>({1:"Monthly",2:"Every 2 months",3:"Every 3 months",6:"Every 6 months",12:"Yearly"})[e]||`Every ${e} months`;
@@ -473,20 +788,37 @@ function fixedList(){
 function billsR(){
   const B=live(S.bills),fx=fixedList(),mo=fx.reduce((a,x)=>a+x.mo,0);
   $("bsum").innerHTML=mo?`Fixed costs ${fmt(mo)}/month · <b>${fmt(mo*12)} a year</b>`:"";
-  $("bll").innerHTML=B.length?B.map(b=>{const s=bst(b);return `<div class="li"><span><b>${esc(b.name)}</b><br><span class="m sm">${b.type==="recurring"?evTxt(b.every)+", day "+b.dueDay:"One-time"} · ${b.card?"Card repayment":esc(b.cat||"Others")}</span> <span class="${s.c} sm">${s.txt}</span></span>
-    <span>${fmt(bAmt(b))}<br><button class="btn ${s.paid?"g":"ok"} s" data-a="pay" data-id="${b.id}">${s.paid?"Undo":"Mark paid"}</button> <button class="btn g s" data-a="ebill" data-id="${b.id}">Edit</button> <button class="btn r s" data-a="dbill" data-id="${b.id}">✕</button></span></div>`}).join(""):'<div class="m sm">No bills yet. Add your credit card, WiFi or recharges.</div>';
+  $("bll").innerHTML=B.length?B.map(b=>{const s=bst(b);return `<div class="li"><span><b>${esc(b.name)}</b><br><span class="m sm">${b.type==="recurring"?evTxt(b.every)+", day "+b.dueDay:"One-time, due "+fdate(b.dueDate)} · ${b.card?"Repayment · "+esc(cardName(cidOf(b))):esc(b.cat||"Others")}${isSpreadB(b)?" · "+fmt(b.amount/b.every)+"/month kept aside":""}</span> <span class="${s.c} sm">${s.txt}</span></span>
+    <span>${fmt(bAmt(b))}<br><button class="btn ${s.paid?"g":"ok"} s" data-a="pay" data-id="${b.id}">${s.paid?"Undo":"Mark paid"}</button> <button class="btn g s" data-a="ebill" data-id="${b.id}">Edit</button> <button class="btn r s" data-a="dbill" data-id="${b.id}">✕</button></span></div>`}).join(""):'<div class="m sm">No bills yet. Add WiFi, recharges or an LIC premium here. Credit cards go under Cards.</div>';
+}
+function cardsR(){
+  const C=CARDS(),k=cm();
+  $("kll").innerHTML=C.length?C.map(c=>{const due=Math.max(0,cardDue(c.id)),u=c.limit>0?due/c.limit*100:0,b=cardBill(c.id),s=b?bst(b):null,st=cardStreak(c.id);
+    return `<div style="padding:10px 0;border-bottom:1px solid var(--bd)"><div class="li" style="border:0;padding:0"><span><b>${esc(c.name)}</b>${c.last4?` <span class="m sm">••${esc(c.last4)}</span>`:""}</span><span><b>${fmt(due)}</b> <span class="m sm">to repay</span></span></div>
+    ${c.limit>0?barH(u,u>=80?"var(--r)":u>=30?"var(--a)":"var(--g)"):""}
+    <div class="m sm">Spent this month ${fmt(cardMonth(k,c.id))}${c.limit>0?` · using ${u.toFixed(0)}% of ${fmt(c.limit)}`:""}${s?` · bill <span class="${s.c}">${s.txt.toLowerCase()}</span>`:" · no bill date set"}${st.lastPartial&&due>0?' · <span class="out">carrying a balance</span>':st.n?` · paid in full ${st.n}×`:""}</div>
+    <div class="row" style="margin-top:8px">${b?`<button class="btn ${s.paid?"g":"ok"} s" data-a="pay" data-id="${b.id}">${s.paid?"Undo payment":"Record payment"}</button>`:""}<button class="btn g s" data-a="ecard" data-id="${c.id}">Edit</button><button class="btn r s" data-a="dcard" data-id="${c.id}">Delete</button></div></div>`}).join("")
+    :'<div class="m sm">No cards yet. Add each credit card to see what you owe on each one.</div>';
 }
 function recR(){
   const L=live(S.recurring),gname=id=>(S.goals.find(g=>g.id===id)||{name:"General savings"}).name;
-  $("rl").innerHTML=L.length?L.map(R=>{const n=recNext(R);return `<div class="li"><span><b>${esc(R.note||(R.type==="saving"?gname(R.goalId):R.category))}</b><br><span class="m sm">${R.type==="income"?"Income":R.type==="saving"?"Saving → "+esc(gname(R.goalId)):"Expense · "+esc(R.category)}${R.card?" · card":""} · ${evTxt(R.every||1)}, day ${R.day} · ${R.active===false?'<span class="wa">Paused</span>':n?"next "+dshort(n):""}</span></span>
+  $("rl").innerHTML=L.length?L.map(R=>{const n=recNext(R);return `<div class="li"><span><b>${esc(R.note||(R.type==="saving"?gname(R.goalId):R.category))}</b><br><span class="m sm">${R.type==="income"?"Income":R.type==="saving"?"Saving → "+esc(gname(R.goalId)):"Expense · "+esc(R.category)}${R.card?" · "+esc(cardName(cidOf(R))):""} · ${evTxt(R.every||1)}, day ${R.day} · ${R.active===false?'<span class="wa">Paused</span>':n?"next "+dshort(n):""}</span></span>
     <span class="${R.type==="income"?"up":R.type==="saving"?"ac":"out"}">${fmx(R.amount)}<br><button class="btn g s" data-a="prec" data-id="${R.id}">${R.active===false?"Resume":"Pause"}</button> <button class="btn g s" data-a="erec" data-id="${R.id}">Edit</button> <button class="btn r s" data-a="drec" data-id="${R.id}">✕</button></span></div>`}).join(""):'<div class="m sm">Nothing repeating yet. Tip: add your salary here so income is logged automatically on payday.</div>';
 }
 function goalsR(){
   const G=live(S.goals),gen=TX().filter(t=>t.type==="saving"&&!t.goalId).reduce((a,t)=>a+sv(t),0);
-  $("gl").innerHTML=(G.length?G.map(g=>{const v=goalSaved(g),left=Math.max(0,g.target-v),mo=g.by?Math.max(1,mdiff(cm(),g.by)+1):0;
-    return `<div style="padding:10px 0;border-bottom:1px solid var(--bd)"><div class="li" style="border:0;padding:0"><span><b>${esc(g.name)}</b>${g.by?` <span class="m sm">by ${mshort(g.by)} ${g.by.slice(0,4)}</span>`:""}</span><span>${fmt(v)} / ${fmt(g.target)}</span></div>${barH(v/g.target*100,"var(--ac)")}
-    <div class="m sm">${left<=0?'<span class="up">✅ Reached!</span>':mo?`${fmt(left)} to go · about <b>${fmt(left/mo)}/month</b>`:`${fmt(left)} to go`}</div>
-    <div class="row" style="margin-top:8px"><button class="btn s" data-a="gadd" data-id="${g.id}">+ Add money</button><button class="btn g s" data-a="egoal" data-id="${g.id}">Edit</button><button class="btn r s" data-a="dgoal" data-id="${g.id}">Delete</button></div></div>`}).join(""):'<div class="m sm">No goals yet. An emergency fund of 3 months of expenses is a good first one.</div>')
+  const hasRec=g=>live(S.recurring).some(R=>R.type==="saving"&&R.goalId===g.id&&R.active!==false);
+  $("gl").innerHTML=(G.length?G.map(g=>{
+    const inv=isInv(g),ef=isEF(g),put=goalSaved(g),v=inv?gValue(g):put,t=gTarget(g),left=Math.max(0,t-v),mo=g.by?Math.max(1,mdiff(cm(),g.by)+1):0;
+    const badge=inv?' <span class="tag">📈 investment</span>':ef?' <span class="tag">🛟 emergency fund</span>':"";
+    let info;
+    if(inv){const gain=v-put,lv=lastVal(g);
+      info=`Invested ${fmt(put)} · now ${fmt(v)} · <b class="${gain>=0?"up":"out"}">${gain>=0?"+":"−"}${fmt(Math.abs(gain))}${put>0?` (${(gain/put*100).toFixed(1)}%)`:""}</b><br>${lv?"Value updated "+fdate(lv.d):"Tap <b>Update value</b> once a month with the value from your fund app"}${hasRec(g)?" · SIP is set as a repeat":" · Tip: add your SIP as a repeating Saving to this goal"}`;
+      if(t)info+=`<br>${left<=0?'<span class="up">✅ Target reached</span>':`${fmt(left)} to target${mo?` · about <b>${fmt(left/mo)}/month</b>`:""}`}`}
+    else info=left<=0?'<span class="up">✅ Reached!</span>':`${fmt(left)} to go${mo?` · about <b>${fmt(left/mo)}/month</b>`:""}${ef&&g.auto?` · target is ${efMonths()} months of your essentials, updated as your spending changes`:""}`;
+    return `<div style="padding:10px 0;border-bottom:1px solid var(--bd)"><div class="li" style="border:0;padding:0"><span><b>${esc(g.name)}</b>${badge}${g.by?` <span class="m sm">by ${g.by.slice(5)}-${g.by.slice(0,4)}</span>`:""}</span><span>${fmt(v)}${t?" / "+fmt(t):""}</span></div>${t?barH(v/t*100,"var(--ac)"):""}
+    <div class="m sm">${info}</div>
+    <div class="row" style="margin-top:8px"><button class="btn s" data-a="gadd" data-id="${g.id}">+ ${inv?"Add investment":"Add money"}</button>${inv?`<button class="btn ok s" data-a="gval" data-id="${g.id}">Update value</button>`:""}<button class="btn g s" data-a="egoal" data-id="${g.id}">Edit</button><button class="btn r s" data-a="dgoal" data-id="${g.id}">Delete</button></div></div>`}).join(""):'<div class="m sm">No goals yet. An emergency fund is a good first one: choose the type <b>Emergency fund</b> and leave the target blank.</div>')
     +(gen?`<div class="li" style="margin-top:6px"><span>General savings (no goal)</span><span>${fmt(gen)}</span></div>`:"");
 }
 function wishR(){
@@ -504,34 +836,208 @@ function trend(k){
   return `<svg class="chart" viewBox="0 0 ${W} ${H}" width="100%" style="max-width:480px"><line x1="24" x2="${W-4}" y1="125" y2="125" stroke="var(--bd)"/>${bars}</svg>
   <div class="sm m"><i class="dot" style="background:#16a34a"></i>Income <i class="dot" style="background:#ef4444;margin-left:12px"></i>Expenses</div>`;
 }
-function rep(){
+function nwTrend(k){
+  const f0=(TX().map(t=>t.date).sort()[0]||today()).slice(0,7);
+  const M=[];for(let i=5;i>=0;i--){const m=addM(k,-i);if(m>cm()||m<f0)continue;M.push({m,v:netWorth(monthEnd(m)).nw})}
+  if(!M.some(x=>x.v))return '<div class="m sm">Put money aside or add an investment goal to see your net worth grow.</div>';
+  const mx=Math.max(1,...M.map(x=>Math.abs(x.v))),neg=M.some(x=>x.v<0),base=neg?70:125,sc=neg?55:110;
+  const bars=M.map((x,j)=>{const cx=30+j*48,h=Math.abs(x.v)/mx*sc,y=x.v>=0?base-h:base;return `<rect x="${cx}" y="${y}" width="28" height="${Math.max(1,h)}" rx="3" fill="${x.v>=0?"#0d9488":"#ef4444"}"><title>${fmt(x.v)}</title></rect><text x="${cx+14}" y="141" text-anchor="middle">${mshort(x.m)}</text>`}).join("");
+  const last=M[M.length-1],first=M[0];
+  return `<svg class="chart" viewBox="0 0 320 150" width="100%" style="max-width:480px"><line x1="24" x2="316" y1="${base}" y2="${base}" stroke="var(--bd)"/>${bars}</svg>
+  <div class="sm">Now <b>${fmt(last.v)}</b>${M.length>1?` · <span class="${last.v>=first.v?"up":"out"}">${last.v>=first.v?"▲":"▼"} ${fmt(Math.abs(last.v-first.v))}</span> since ${mshort(first.m)}`:""}</div>
+  <div class="m sm" style="margin-top:4px">Money you've put aside + current value of investments − card dues. Your bank balance isn't included.</div>`;
+}
+function leakCard(){
+  const{leaks:L,subs:Sb}=leaks();
+  if(!L.length&&!Sb.length)return '<div class="card"><h3>Small leaks</h3><div class="m sm">Add notes to expenses (like "tea", "Swiggy", "Uber") and Kudukka will show which small habits add up over a year.</div></div>';
+  return `<div class="card"><h3>Small leaks (last 90 days)</h3>
+  ${L.map(o=>`<div class="li"><span><b>${esc(o.note)}</b> <span class="tag">${esc(o.cat)}</span><br><span class="m sm">${o.c} times · avg ${fmt(o.avg)}</span></span><span>≈ <b class="out">${fmt(o.yr)}</b>/yr</span></div>`).join("")}
+  ${L.length?`<div class="m sm" style="margin-top:8px">Cutting the top one by half saves about ${fmt(L[0].yr/2)} a year.</div>`:""}
+  ${Sb.length?`<h3 style="margin-top:14px">Looks like a subscription</h3>${Sb.map(o=>`<div class="li"><span><b>${esc(o.note)}</b><br><span class="m sm">same amount in ${o.months.size} months</span></span><span>${fmt(o.mo)}/mo · <b>${fmt(o.mo*12)}/yr</b></span></div>`).join("")}<div class="m sm" style="margin-top:8px">Still using these? If yes, add them under Plan → Repeats so they're counted in your plan. If not, cancel.</div>`:""}</div>`;
+}
+/* ================= reports: weekly and monthly, with suggestions ================= */
+let rMode=DEV.rmode==="month"?"month":"week",rWs=null;
+const sumA=a=>a.reduce((x,t)=>x+ +t.amount,0);
+const grp=(a,f)=>{const m={};a.forEach(t=>{const k=f(t);m[k]=(m[k]||0)+ +t.amount});return m};
+const wkStart=d=>addD(d,-((new Date(d+"T00:00:00").getDay()+6)%7));
+const isFood=c=>/food|dining|restaurant|eat|hotel|snack|swiggy|zomato|tea|coffee|bakery/i.test(c);
+const statC=(l,v,sub)=>`<div class="card"><span class="m sm">${l}</span><b>${v}</b><span class="m sm">${sub||""}</span></div>`;
+function period(from,to){
+  const t=today(),all=TX().filter(x=>x.date>=from&&x.date<=to),exp=all.filter(x=>x.type==="expense"),ev=exp.filter(x=>!fixedTx(x)),fx=exp.filter(fixedTx),sav=all.filter(x=>x.type==="saving");
+  const first=TX().filter(x=>x.type==="expense").map(x=>x.date).sort()[0],st=startDate(),tf=first&&first<st?first:st,N=notedSet(),days=[];
+  for(let d=from;d<=to;d=addD(d,1))days.push({d,amt:sumA(ev.filter(x=>x.date===d)),past:d<=t});
+  const el=days.filter(x=>x.past&&x.d>=tf);
+  return{from,to,all,exp,ev,fx,days,el,done:to<t,spent:sumA(ev),fixed:sumA(fx),inc:sumA(all.filter(x=>x.type==="income")),
+    aside:sav.reduce((a,x)=>a+sv(x),0),invested:sav.filter(x=>isInv(goalOf(x.goalId))).reduce((a,x)=>a+sv(x),0),
+    ns:el.filter(x=>!x.amt).length,unnoted:el.filter(x=>x.d>=st&&!N.has(x.d)).length};
+}
+/* suggestions worked out from the entries of one week or month */
+function tips(o){
+  const{scope:per,cur,prev,lim,mul}=o,T=[],add=(w,i,t,s,btn)=>T.push({w,i,t,s:Math.round(s||0),btn}),r=cardRate();
+  /* a single large purchase is reported separately and left out of the habit estimates, so it can't inflate them */
+  const big=[...cur.ev].sort((a,b)=>b.amount-a.amount)[0],one=big&&cur.ev.length>=3&&big.amount>=cur.spent*.3?big:null,ev=one?cur.ev.filter(t=>t!==one):cur.ev,tot=cur.spent-(one?+one.amount:0);
+  carrying().forEach(c=>{const due=cardDue(c.id);add(100,"💳",`<b>${esc(c.name)}</b> is carrying ${fmt(due)}, which costs about ${fmt(due*r/100)} a month in interest. Clear this before putting more into savings or investments.`,due*r/100)});
+  if(!cur.ev.length){add(50,"📝",`Nothing noted in this ${per}${cur.done?"":" yet"}. Add each spend as it happens with the + button, or mark the day as no spending.`);return T}
+  const bc=grp(ev,t=>t.category),pc=grp(prev.ev,t=>t.category),cnt={};ev.forEach(t=>cnt[t.category]=(cnt[t.category]||0)+1);
+  Object.entries(bc).filter(([c])=>cls(c)==="want").sort((a,b)=>b[1]-a[1]).slice(0,2).forEach(([c,v],i)=>{
+    const p=pc[c]||0,sh=v/tot;if(v<200||(sh<(i?.2:.15)&&!(p&&v>p*1.2)))return;const cut=v/3*mul;
+    add(80-i*5,isFood(c)?"🍽️":"✂️",`${isFood(c)?"Eat out and order in less. ":""}<b>${esc(c)}</b> took ${fmt(v)} over ${cnt[c]} spend${cnt[c]>1?"s":""} (${(sh*100).toFixed(0)}% of everyday spending)${p&&Math.abs(v-p)>=1?`, ${v>=p?"up":"down"} ${fmt(Math.abs(v-p))} on last ${per}`:""}. ${cnt[c]>=3?`Skipping one in three saves about <b>${fmt(cut)} a month</b>.`:"Ask whether it could have waited or cost less."}`,cnt[c]>=3?cut:0)});
+  const nm={};ev.forEach(t=>{const k=(t.note||"").trim().toLowerCase();if(!k)return;const x=nm[k]=nm[k]||{n:t.note.trim(),c:0,s:0};x.c++;x.s+= +t.amount});
+  const hab=Object.values(nm).filter(x=>x.c>=(per==="week"?3:6)).sort((a,b)=>b.s-a.s)[0];
+  if(hab)add(70,"🔁",`<b>${esc(hab.n)}</b> came up ${hab.c} times and added up to ${fmt(hab.s)}. Halving it saves about <b>${fmt(hab.s/2*mul)} a month</b>.`,hab.s/2*mul);
+  if(one&&cls(one.category)==="want")add(60,"🛍️",`One purchase (${esc(one.note||one.category)}, ${fmt(one.amount)}) was ${(one.amount/cur.spent*100).toFixed(0)}% of this ${per}'s everyday spending. For wants this size, park it in the wishlist for 24 hours first.`);
+  const isWe=x=>[0,6].includes(new Date(x.d+"T00:00:00").getDay()),da=x=>x.amt-(one&&one.date===x.d?+one.amount:0),we=cur.el.filter(isWe),wd=cur.el.filter(x=>!isWe(x));
+  if(we.length&&wd.length>=2){const a=we.reduce((s,x)=>s+da(x),0)/we.length,b=wd.reduce((s,x)=>s+da(x),0)/wd.length;
+    if(a>b*1.5&&a-b>=100)add(55,"📅",`Weekends cost about ${fmt(a)} a day against ${fmt(b)} on weekdays. Decide a weekend amount before Saturday and stop there.`,(a-b)*8.7*.5)}
+  if(lim>0){const over=cur.spent-lim;
+    if(over>0)add(90,"🚦",`Everyday spending is ${fmt(over)} over the limit of ${fmt(lim)} for ${cur.done?"this "+per:"the days so far"}. Anything over the limit comes out of your savings target.`);
+    else if(cur.done&&-over>=50)add(65,"✅",`You finished ${fmt(-over)} under the limit. Put it aside now so it doesn't get spent later.`,0,{a:"tput",n:Math.floor(-over),l:"Put aside "+fmt(-over)})}
+  const ca=sumA(cur.exp.filter(t=>t.card)),te=sumA(cur.exp);
+  if(te>0&&ca/te>=.6&&ca>=1000)add(45,"💳",`${(ca/te*100).toFixed(0)}% of spending (${fmt(ca)}) went on credit cards. Card spending is easy to lose track of, so pay small daily spends by UPI and keep the cards for planned purchases.`);
+  CARDS().forEach(c=>{const due=cardDue(c.id);if(c.limit>0&&due>=c.limit*.3)add(40,"💳",`<b>${esc(c.name)}</b> is using ${(due/c.limit*100).toFixed(0)}% of its limit. Staying below about 30% is generally better for your credit score.`)});
+  const oth=bc.Others||0;if(oth>=tot*.2&&oth>=300)add(30,"🏷️",`${fmt(oth)} is sitting in <b>Others</b>. Give these a proper category so they can be tracked.`);
+  const nn=ev.filter(t=>!t.note).length;if(ev.length>=5&&nn/ev.length>.5)add(25,"📝",`${nn} of ${ev.length} entries have no note. One word (tea, auto, Swiggy) is enough for Kudukka to spot habits.`);
+  if(per==="week"&&cur.el.length>=4)add(20,"🌱",cur.ns?`${cur.ns} no-spend day${cur.ns>1?"s":""} this week. Aim for ${cur.ns+1} next week.`:"No no-spend days this week. Try for one next week.");
+  return T;
+}
+function monthTips(k,T){
+  const p=plan(),add=(w,i,t,btn)=>T.push({w,i,t,s:0,btn});
+  if(k===cm()&&p&&p.goal>0&&p.aside<p.goal-1)add(72,"🏦",`You've put aside ${fmt(p.aside)} of this month's ${fmt(p.goal)} target. Move ${fmt(p.goal-p.aside)} now, before it gets spent.`,{a:"tput",n:Math.round(p.goal-p.aside),l:"Put aside "+fmt(p.goal-p.aside)});
+  if(!live(S.recurring).some(R=>R.active!==false&&R.type==="saving"))add(68,"⏱️","Your saving isn't automatic yet. Add a fixed amount as a repeating <b>Saving</b> dated on salary day (Plan → Repeats), so it leaves before you can spend it.");
+  if(!efGoal())add(50,"🛟",`No emergency fund yet. ${efMonths()} months of essentials is about ${fmt(efAuto())}. Start one under Plan → Goals so a surprise doesn't land on a card.`);
+  const sub=fixedList().filter(x=>x.cat==="Subscriptions").reduce((a,x)=>a+x.mo,0);
+  if(sub>0)add(35,"📺",`Subscriptions cost ${fmt(sub)} a month, which is ${fmt(sub*12)} a year. Cancel one you rarely use.`);
+  const g=byCat(k);Object.entries(S.budgets).forEach(([c,l])=>{const v=g[c]||0;if(l>0&&v>l)add(78,"🎯",`<b>${esc(c)}</b> is ${fmt(v-l)} over its ${fmt(l)} budget.`)});
+}
+function tipsCard(T,title){
+  T=T.sort((a,b)=>b.w-a.w).slice(0,6);const tot=T.reduce((a,x)=>a+(x.s>=50?x.s:0),0);
+  return `<div class="card" style="border-left:4px solid var(--ac)"><h3>💡 ${title}</h3>${T.map(x=>`<div class="tip"><span class="ti">${x.i}</span><div><div>${x.t}</div>${x.s>=50?`<span class="pill">≈ ${fmt(x.s)}/month</span>`:""}${x.btn?`<div style="margin-top:8px"><button class="btn ok s" data-a="${x.btn.a}" data-n="${x.btn.n}">${x.btn.l}</button></div>`:""}</div></div>`).join("")}
+  ${tot>=100?`<div class="res ok" style="margin-top:10px">Acting on these could free up about <b>${fmt(tot)} a month</b>, which is ${fmt(tot*12)} a year.</div>`:""}</div>`;
+}
+function dayChart(days,limDay){
+  const mx=Math.max(1,limDay||0,...days.map(x=>x.amt)),t=today(),bw=30;
+  const bars=days.map((x,j)=>{const cx=14+j*43,h=x.amt/mx*96,over=limDay>0&&x.amt>limDay+.5,mid=cx+bw/2;
+    return `<rect x="${cx}" y="${120-h}" width="${bw}" height="${x.amt?Math.max(2,h):0}" rx="4" fill="${over?"#ef4444":"#0d9488"}"><title>${fdate(x.d)}: ${fmt(x.amt)}</title></rect>
+    ${x.amt?`<text x="${mid}" y="${115-h}" text-anchor="middle">${x.amt>=1000?(x.amt/1000).toFixed(1)+"k":Math.round(x.amt)}</text>`:x.past?`<text x="${mid}" y="115" text-anchor="middle">0</text>`:""}
+    <text x="${mid}" y="134" text-anchor="middle"${x.d===t?' font-weight="800" style="fill:var(--ac)"':""}>${wday(x.d)}</text><text x="${mid}" y="146" text-anchor="middle">${x.d.slice(8)}</text>`}).join("");
+  const ly=limDay>0?120-limDay/mx*96:0;
+  return `<svg class="chart" viewBox="0 0 320 150" width="100%" style="max-width:480px">${limDay>0?`<line x1="8" x2="314" y1="${ly}" y2="${ly}" stroke="#d97706" stroke-dasharray="4 3"/>`:""}<line x1="8" x2="314" y1="120" y2="120" stroke="var(--bd)"/>${bars}</svg>
+  <div class="sm m"><i class="dot" style="background:#0d9488"></i>Within limit <i class="dot" style="background:#ef4444;margin-left:10px"></i>Over${limDay>0?` · dashed line is the daily limit, ${fmt(limDay)}`:""}</div>`;
+}
+function weekBars(k,cur,limFull){
+  const D=dim(k),t=today(),seg=[];let s=1;
+  while(s<=D){const w=(new Date(dk(k,s)+"T00:00:00").getDay()+6)%7,e=Math.min(D,s+6-w);seg.push({s,e,amt:sumA(cur.ev.filter(x=>+x.date.slice(8)>=s&&+x.date.slice(8)<=e)),lim:limFull>0?limFull/D*(e-s+1):0,past:dk(k,s)<=t});s=e+1}
+  const mx=Math.max(1,...seg.map(x=>Math.max(x.amt,x.lim))),gap=300/seg.length,bw=Math.min(34,gap-12);
+  const bars=seg.map((x,j)=>{const cx=12+j*gap+(gap-bw)/2,h=x.amt/mx*96,ly=120-x.lim/mx*96,mid=cx+bw/2;
+    return `<rect x="${cx}" y="${120-h}" width="${bw}" height="${x.amt?Math.max(2,h):0}" rx="4" fill="${x.lim&&x.amt>x.lim+.5?"#ef4444":"#0d9488"}"><title>${fmt(x.amt)}</title></rect>
+    ${x.lim?`<line x1="${cx-4}" x2="${cx+bw+4}" y1="${ly}" y2="${ly}" stroke="#d97706" stroke-width="2"/>`:""}
+    ${x.amt?`<text x="${mid}" y="${115-h}" text-anchor="middle">${x.amt>=1000?(x.amt/1000).toFixed(1)+"k":Math.round(x.amt)}</text>`:""}
+    <text x="${mid}" y="136" text-anchor="middle">${pad(x.s)}–${pad(x.e)}</text>`}).join("");
+  return `<svg class="chart" viewBox="0 0 320 142" width="100%" style="max-width:480px"><line x1="8" x2="314" y1="120" y2="120" stroke="var(--bd)"/>${bars}</svg>
+  <div class="sm m">Everyday spending for each week of the month (dates)${limFull>0?" · orange mark is that week's limit":""}</div>`;
+}
+function catRows(ev,prevEv,per){
+  const g=Object.entries(grp(ev,t=>t.category)).sort((a,b)=>b[1]-a[1]),pg=grp(prevEv,t=>t.category),tot=sumA(ev),mx=g.length?g[0][1]:1;
+  return g.length?g.map(([c,v],i)=>{const df=v-(pg[c]||0);return `<div style="padding:7px 0"><div class="li" style="border:0;padding:0"><span><i class="dot" style="background:${P[i%P.length]}"></i>${esc(c)} <span class="tag">${cls(c)}</span></span><span>${fmt(v)} · ${(v/tot*100).toFixed(0)}%</span></div>
+    <div class="bar" style="margin:5px 0 2px"><i style="width:${v/mx*100}%;background:${P[i%P.length]}"></i></div>${prevEv.length&&Math.abs(df)>=1?`<div class="sm ${df>0?"out":"up"}">${df>0?"▲":"▼"} ${fmt(Math.abs(df))} vs last ${per}</div>`:""}</div>`}).join(""):'<div class="m sm">No everyday spending noted.</div>';
+}
+function payRows(exp){
+  const g=grp(exp,t=>t.card?cidOf(t):""),tot=sumA(exp);if(!tot)return '<div class="m sm">No spending noted.</div>';
+  return Object.entries(g).sort((a,b)=>b[1]-a[1]).map(([id,v])=>`<div class="li"><span>${id?"💳 "+esc(cardName(id)):"💵 Cash / UPI / bank"}</span><span>${fmt(v)} · ${(v/tot*100).toFixed(0)}%</span></div>`).join("");
+}
+const stack=parts=>{const tot=parts.reduce((a,x)=>a+Math.max(0,x.v),0)||1;return `<div class="stk">${parts.map(x=>`<i style="width:${Math.max(0,x.v)/tot*100}%;background:${x.c}"></i>`).join("")}</div>${parts.map(x=>`<div class="li" style="padding:5px 0"><span><i class="dot" style="background:${x.c}"></i>${x.l}</span><span>${fmt(x.v)} · ${(Math.max(0,x.v)/tot*100).toFixed(0)}%</span></div>`).join("")}`};
+/* what's set up and what's missing, for saving more */
+function setupList(){
+  const R=live(S.recurring).filter(r=>r.active!==false),C=CARDS(),ef=efGoal(),carry=carrying(),ms=missed();
+  return[
+    {ok:S.settings.income>0||R.some(r=>r.type==="income"),t:"Income is set",h:"Settings ⚙️ → Savings plan, or add your salary under Plan → Repeats."},
+    {ok:R.some(r=>r.type==="saving"),t:"A fixed amount is saved automatically every month",h:"Plan → Repeats → Saving, dated on salary day. Saving only what's left over usually means nothing is left."},
+    {ok:!!ef&&goalSaved(ef)>=gTarget(ef),t:`Emergency fund of ${efMonths()} months of essentials`,h:ef?`${fmt(goalSaved(ef))} of ${fmt(gTarget(ef))} so far. Keep adding before raising investments.`:"Plan → Goals → type Emergency fund. Build this before adding more to investments."},
+    {ok:C.length>0&&C.every(c=>cardBill(c.id)),t:"Every credit card is added with its bill date",h:`Plan → Cards. ${C.length} card${C.length===1?"":"s"} added so far.`},
+    {ok:C.length>0&&!carry.length&&cardStreak().n>=1,t:"Card bills are paid in full",h:carry.length?carry.map(c=>esc(c.name)).join(", ")+" carried a balance after the last payment. Never pay only the minimum due.":"Record each card payment under Plan → Cards. Always pay the full statement amount, never the minimum due."},
+    {ok:live(S.goals).some(isInv),t:"Investments are tracked (mutual fund, LIC)",h:"Plan → Goals → type Investment. Then add the SIP or premium under Plan → Repeats as a Saving to that goal."},
+    {ok:heldList().length>0,t:"Quarterly and yearly payments are spread across months",h:"Add LIC, insurance or fees as a bill or repeat that comes every 3, 6 or 12 months. Kudukka then keeps a share aside each month."},
+    {ok:Object.keys(S.budgets).length>0,t:"Budgets are set on your biggest wants",h:"Settings ⚙️ → Monthly budgets. Start with Food & Dining and Shopping."},
+    {ok:ms.st<=today()&&!ms.days.length,t:"Every day is noted",h:ms.st>today()?"Daily tracking starts "+fdate(ms.st)+".":ms.days.length+" day"+(ms.days.length===1?"":"s")+" with nothing noted. Fill them in from Home."}];
+}
+function setupCard(){
+  const L=setupList(),n=L.filter(x=>x.ok).length;
+  return `<div class="card"><h3>Savings setup · ${n} of ${L.length} done</h3>${barH(n/L.length*100,"var(--ac)")}
+  ${L.map(x=>`<div class="tip"><span class="ti">${x.ok?"✅":"⬜"}</span><div><div${x.ok?' class="m"':""}>${x.t}</div>${x.ok?"":`<div class="m sm">${x.h}</div>`}</div></div>`).join("")}</div>`;
+}
+function repW(){
+  const t=today(),ws=rWs||(rWs=wkStart(t)),we=addD(ws,6),cur=period(ws,we),prev=period(addD(ws,-7),addD(ws,-1)),p=plan(),lim7=p&&p.lim>0?p.lim/p.D*7:0,
+    eln=cur.days.filter(x=>x.past).length,lim=cur.done?lim7:lim7*eln/7,mul=4.345*(cur.done||!eln?1:7/eln),thisW=wkStart(t);
+  $("rwl").innerHTML=`${ws===thisW?"This week":ws===addD(thisW,-7)?"Last week":"Week"}<br><span class="m sm" style="font-weight:500">${wday(ws)} ${fdate(ws)} to ${wday(we)} ${fdate(we)}</span>`;
+  $("rwn").disabled=ws>=thisW;$("rwn").style.opacity=ws>=thisW?.35:1;
+  const df=cur.spent-prev.spent,pc=lim>0?cur.spent/lim*100:0,nd=sumA(cur.ev.filter(x=>cls(x.category)==="need")),top=[...cur.exp].sort((a,b)=>b.amount-a.amount).slice(0,5);
+  $("rpc").innerHTML=`<div class="card"><h3>Everyday spending${cur.done?"":" so far"}</h3><div class="big" style="color:${lim&&cur.spent>lim?"var(--r)":"inherit"}">${fmt(cur.spent)}</div>
+    ${lim7?barH(pc,cur.spent>lim?"var(--r)":pc>80?"var(--a)":"var(--g)")+`<div class="m sm">${cur.done?`Week limit ${fmt(lim7)}`:`Limit for the ${eln} day${eln===1?"":"s"} so far ${fmt(lim)} · full week ${fmt(lim7)}`} · ${cur.spent>lim?`<span class="out">${fmt(cur.spent-lim)} over</span>`:`<span class="up">${fmt(lim-cur.spent)} under</span>`}</div>`:'<div class="m sm">Set your income in Settings ⚙️ to get a weekly limit.</div>'}
+    ${prev.ev.length?`<div class="sm" style="margin-top:6px">${df>0?`<span class="out">▲ ${fmt(df)}</span> more`:`<span class="up">▼ ${fmt(-df)}</span> less`} than the week before (${fmt(prev.spent)})</div>`:""}</div>
+  <div class="stats">${statC("Bills and fixed",fmt(cur.fixed),"paid this week")}${statC("Put aside",fmt(cur.aside),cur.invested?fmt(cur.invested)+" invested":"savings + investments")}${statC("No-spend days",cur.ns+" of "+cur.el.length,cur.unnoted?cur.unnoted+" not noted":"days tracked")}</div>
+  <div class="card"><h3>Day by day</h3>${dayChart(cur.days,lim7/7)}</div>
+  ${tipsCard(tips({scope:"week",cur,prev,lim,mul}),cur.done?"What to do next":"What to do for the rest of the week")}
+  <div class="card"><h3>Everyday spending by category</h3>${catRows(cur.ev,prev.ev,"week")}</div>
+  ${cur.spent?`<div class="card"><h3>Needs and wants</h3>${stack([{l:"Needs",v:nd,c:"#3b82f6"},{l:"Wants",v:cur.spent-nd,c:"#f59e0b"}])}</div>`:""}
+  <div class="card"><h3>Paid with</h3>${payRows(cur.exp)}</div>
+  <div class="card"><h3>Biggest expenses</h3>${top.length?top.map(x=>`<div class="li"><span>${esc(x.category)} <span class="m sm">${fdate(x.date)} ${esc(x.note||"")}</span></span><span class="out">${fmx(x.amount)}</span></div>`).join(""):'<div class="m sm">No expenses noted.</div>'}</div>`;
+}
+function rep(){segOn("rmode",rMode);$("rwk").hidden=rMode!=="week";$("rmo").hidden=rMode!=="month";if(rMode==="week")repW();else repM()}
+function repM(){
   const k=$("rm").value||cm(),s=sums(k),q=sums(pm(k)),inc=incOf(k),n=need(k),w=s.exp-n,g=Object.entries(byCat(k)).sort((a,b)=>b[1]-a[1]);
   const d=(c,o,inv)=>o?`<span class="${(c>=o)!==!!inv?"up":"out"}">${c>=o?"▲":"▼"} ${fmt(Math.abs(c-o))}</span>`:"";
   const bar=(l,v,t,c)=>{const p=inc?v/inc*100:0;return `<div style="margin-bottom:12px"><div class="li" style="border:0;padding:0"><b>${l}</b><span>${fmt(v)} · ${p.toFixed(0)}% <span class="m sm">(target ${t}%)</span></span></div>${barH(p,c)}</div>`};
   const fx=fixedList(),mo=fx.reduce((a,x)=>a+x.mo,0),sub=fx.filter(x=>x.cat==="Subscriptions").reduce((a,x)=>a+x.mo,0);
-  $("rpc").innerHTML=`<div class="stats">${stats(s,q)}</div>
+  const cur=period(k+"-01",dk(k,31)),prv=period(pm(k)+"-01",dk(pm(k),31)),pl=plan(),D=dim(k),eln=cur.days.filter(x=>x.past).length,
+    limFull=k===cm()&&pl?pl.lim:inc?inc*(1-target(k)/100)-cur.fixed:0,lim=limFull>0?(cur.done?limFull:limFull*eln/D):0,T=tips({scope:"month",cur,prev:prv,lim,mul:cur.done||!eln?1:D/eln});
+  monthTips(k,T);
+  const left=Math.max(0,inc-cur.fixed-cur.spent-Math.max(0,cur.aside)),rate=inc?cur.aside/inc*100:0,tgK=target(k);
+  const extraTop=tipsCard(T,cur.done?"What to do next month":"What to do for the rest of the month")
+    +(inc?`<div class="card"><h3>Where your income went</h3>${stack([{l:"Bills and fixed costs",v:cur.fixed,c:"#6366f1"},{l:"Everyday spending",v:cur.spent,c:"#f59e0b"},{l:"Put aside and invested",v:Math.max(0,cur.aside),c:"#16a34a"},{l:"Not yet used",v:left,c:"#94a3b8"}])}
+      <div class="res ${rate>=tgK?"ok":"warn"}" style="margin-top:10px">You put aside <b>${rate.toFixed(0)}%</b> of your income${cur.invested?` (${fmt(cur.invested)} of it invested)`:""}. Your target is ${f1(tgK)}%.</div></div>`:"")
+    +`<div class="card"><h3>Week by week</h3>${weekBars(k,cur,limFull)}</div>`
+    +`<div class="stats">${statC("Daily average",fmt(eln?cur.spent/eln:0),"everyday spending")}${statC("No-spend days",cur.ns+" of "+cur.el.length,"days tracked")}${statC("Entries",cur.exp.length,"expenses noted")}</div>`;
+  const extraBottom=`<div class="card"><h3>Paid with</h3>${payRows(cur.exp)}</div>${setupCard()}`;
+  $("rpc").innerHTML=`<div class="stats">${stats(s,q)}</div>${extraTop}
   <div class="card"><h3>Last 6 months</h3>${trend(k)}</div>
   <div class="card"><h3>Needs, wants and savings (50/30/20)</h3>${inc?(s.inc?"":`<div class="m sm" style="margin-bottom:8px">Using your expected income of ${fmt(inc)} (no income logged yet).</div>`)+bar("Needs",n,50,"#3b82f6")+bar("Wants",w,30,"#f59e0b")+bar("Savings",inc-s.exp,20,"#16a34a"):'<div class="m sm">Add income to see this breakdown.</div>'}</div>
   <div class="card"><h3>What your fixed costs cost per year</h3>${fx.length?fx.map(x=>`<div class="li"><span>${esc(x.name)} ${x.cat==="Subscriptions"?'<span class="tag">subscription</span>':""}</span><span>${fmt(x.mo)}/mo · <b>${fmt(x.mo*12)}/yr</b></span></div>`).join("")
     +`<div class="li"><b>Total</b><b>${fmt(mo)}/mo · ${fmt(mo*12)}/yr</b></div>${sub?`<div class="res warn" style="margin-top:10px">Subscriptions alone cost <b>${fmt(sub*12)} a year</b>. Cancelling one you rarely use is the easiest saving you'll make.</div>`:""}`
     :'<div class="m sm">Add monthly bills or repeating expenses to see their yearly cost.</div>'}</div>
-  <div class="card"><h3>Category breakdown</h3>${g.length?g.map(([c,v],i)=>`<div class="li"><span><i class="dot" style="background:${P[i%P.length]}"></i>${esc(c)} <span class="tag">${cls(c)}</span>${S.budgets[c]?` <span class="m sm">budget ${fmt(S.budgets[c])}</span>`:""}</span><span>${fmt(v)} · ${(v/s.exp*100).toFixed(0)}%</span></div>`).join(""):'<div class="m sm">No expenses this month.</div>'}</div>
-  <div class="card"><h3>Compared with ${mname(pm(k))}</h3>${[["Income",s.inc,q.inc],["Expenses",s.exp,q.exp,1],["Saved",s.sav,q.sav]].map(([l,c,o,inv])=>`<div class="li"><span>${l}</span><span>${fmt(o)} → ${fmt(c)} ${d(c,o,inv)}</span></div>`).join("")}</div>`;
+  <div class="card"><h3>Net worth (tracked), last 6 months</h3>${nwTrend(k)}</div>
+  ${leakCard()}
+  <div class="card"><h3>Category breakdown</h3>${g.length?g.map(([c,v],i)=>{const u=usual(c,k,byCat),hi=u>0&&v>u*1.2;return `<div class="li"><span><i class="dot" style="background:${P[i%P.length]}"></i>${esc(c)} <span class="tag">${cls(c)}</span>${S.budgets[c]?` <span class="m sm">budget ${fmt(S.budgets[c])}</span>`:""}${u>0?`<br><span class="sm ${hi?"out":"m"}">usual ${fmt(u)}/month${hi?` · ${((v/u-1)*100).toFixed(0)}% above`:""}</span>`:""}</span><span>${fmt(v)} · ${(v/s.exp*100).toFixed(0)}%</span></div>`}).join(""):'<div class="m sm">No expenses this month.</div>'}</div>
+  <div class="card"><h3>Compared with ${mname(pm(k))}</h3>${[["Income",s.inc,q.inc],["Expenses",s.exp,q.exp,1],["Saved",s.sav,q.sav]].map(([l,c,o,inv])=>`<div class="li"><span>${l}</span><span>${fmt(o)} → ${fmt(c)} ${d(c,o,inv)}</span></div>`).join("")}</div>${extraBottom}`;
 }
 function setr(){
   $("sth").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.v===S.settings.theme));
   $("sper").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.v===(S.settings.period||"day")));
+  segOn("san",DEV.anim===false?"off":"on");
   const chip=(c,k)=>`<span class="chip">${c.cls?`<button class="tag" data-a="ccls" data-n="${esc(c.name)}">${c.cls}</button>`:""}${esc(c.name)}<button data-a="rcat" data-k="${k}" data-n="${esc(c.name)}" title="Rename">✎</button><button class="x" data-a="dcat" data-k="${k}" data-n="${esc(c.name)}" title="Delete">×</button></span>`;
   $("cel").innerHTML='<h3 style="margin-top:6px">Expense</h3>'+S.categories.expense.map(c=>chip(c,"expense")).join("");
   $("cil").innerHTML='<h3 style="margin-top:10px">Income</h3>'+S.categories.income.map(c=>chip(c,"income")).join("");
   $("bgr").innerHTML=S.categories.expense.map(c=>`<div class="li"><span>${esc(c.name)} <span class="tag">${c.cls}</span></span><input type="number" min="0" data-bc="${esc(c.name)}" placeholder="No limit" value="${S.budgets[c.name]||""}" style="width:130px"></div>`).join("");
   $("cid").value=DEV.clientId;$("sdis").hidden=!DEV.syncOn;$("syb").hidden=!DEV.clientId;$("syb").classList.toggle("on",!!tok);
-  $("sst").textContent=DEV.syncOn?(DEV.lastSync?"Last synced "+new Date(DEV.lastSync).toLocaleString("en-IN",{dateStyle:"medium",timeStyle:"short"}):"Connected"):"Not connected";
-  $("bkst").textContent=DEV.lastBackup?"Last exported "+new Date(DEV.lastBackup).toLocaleDateString("en-IN",{dateStyle:"medium"}):"Never exported from this device.";
+  $("sst").textContent=DEV.syncOn?(DEV.lastSync?"Last synced "+fts(DEV.lastSync):"Connected"):"Not connected";
+  $("bkst").textContent=DEV.lastBackup?"Last exported "+fdate(isoOf(new Date(DEV.lastBackup))):"Never exported from this device.";
 }
-function fillPlan(){const s=S.settings;$("pi").value=s.income||"";$("pt").value=f1(target(cm()));$("ps").value=s.step;$("pc").value=s.cardOpen||"";$("pcap").value=s.cardCap||""}
-function render(){theme();fill();home();txl();billsR();recR();goalsR();wishR();rep();setr()}
-function show(id){document.querySelectorAll("main>section").forEach(s=>s.classList.toggle("on",s.id===id));document.querySelectorAll("nav button[data-s]").forEach(b=>b.classList.toggle("on",b.dataset.s===id));$("gear").classList.toggle("on",id==="se");if(id==="se")fillPlan();scrollTo(0,0)}
+function fillPlan(){const s=S.settings;$("pi").value=s.income||"";$("pt").value=f1(target(cm()));$("ps").value=s.step;$("pcap").value=s.cardCap||"";$("pcr").value=cardRate();$("pem").value=efMonths();$("sstart").value=startDate()}
+function render(){theme();fill();home();txl();billsR();cardsR();recR();goalsR();wishR();rep();setr()}
+function show(id){document.querySelectorAll("main>section").forEach(s=>s.classList.toggle("on",s.id===id));document.querySelectorAll("nav button[data-s]").forEach(b=>b.classList.toggle("on",b.dataset.s===id));$("gear").classList.toggle("on",id==="se");if(id==="se")fillPlan();pulse();scrollTo(0,0)}
+
+/* ================= light animations ================= */
+function applyAnim(){document.documentElement.classList.toggle("noanim",DEV.anim===false)}
+const animOn=()=>DEV.anim!==false&&!matchMedia("(prefers-reduced-motion: reduce)").matches;
+function pulse(){if(!animOn())return;document.body.classList.add("go");clearTimeout(pulse.h);pulse.h=setTimeout(()=>document.body.classList.remove("go"),900)}
+const CU={};let firstPaint=true;setTimeout(()=>firstPaint=false,1200);
+function countUp(el,key,to){
+  if(!el)return;const from=CU[key];CU[key]=to;
+  if(!animOn()||from===to||(from==null&&!firstPaint))return;
+  const a=from==null?0:from,t0=performance.now();
+  const step=n=>{if(!el.isConnected)return;const x=Math.min(1,(n-t0)/500),e=1-Math.pow(1-x,3);el.textContent=fmt(a+(to-a)*e);if(x<1)requestAnimationFrame(step)};
+  requestAnimationFrame(step);
+}
+function fabOk(){const f=$("fab"),s=f.firstElementChild;f.classList.add("ok");s.textContent="✓";clearTimeout(fabOk.h);fabOk.h=setTimeout(()=>{f.classList.remove("ok");s.textContent="+"},1000)}
 
 /* ================= quick add sheet ================= */
 let sh={};
@@ -551,15 +1057,21 @@ function shNotes(){
   $("snotes").innerHTML=top.map(n=>`<button class="ch" data-n="${esc(n)}">${esc(n)}</button>`).join("");
   $("snotes").querySelectorAll(".ch").forEach(b=>b.onclick=()=>{$("sn").value=b.dataset.n;if(!$("sa").value)$("sa").value=last[b.dataset.n]});
 }
+function shPay(){
+  const C=CARDS().length?CARDS():[{id:"card1",name:"Credit card"}];
+  $("spay").innerHTML=`<button class="ch${sh.pay?"":" on"}" data-p="">Cash / UPI</button>`+C.map(c=>`<button class="ch${sh.pay===c.id?" on":""}" data-p="${c.id}">💳 ${esc(c.name)}</button>`).join("");
+  $("spay").querySelectorAll(".ch").forEach(b=>b.onclick=()=>{sh.pay=b.dataset.p;shPay()});
+}
 function shType(v){
-  sh.type=v;segOn("st",v);$("scw").hidden=v==="saving";$("sgw").hidden=v!=="saving";$("scf").hidden=v!=="expense";segOn("swd",sh.wd?"out":"in");
+  sh.type=v;segOn("st",v);$("scw").hidden=v==="saving";$("smsd").hidden=v==="saving"||!!sh.id;$("sgw").hidden=v!=="saving";$("scf").hidden=v!=="expense";shPay();segOn("swd",sh.wd?"out":"in");
   if(v!=="saving")shCats();else shNotes();
 }
 function openSheet(o={}){
   const t=o.id?S.transactions.find(x=>x.id===o.id):null;fill();
-  sh={id:t?t.id:null,type:t?t.type:o.type||"expense",cat:t?t.category:o.category||null,wd:t?!!t.wd:!!o.wd,wish:o.wish||null};
-  $("sa").value=t?t.amount:o.amount||"";$("sn").value=t?t.note||"":o.note||"";$("sd").value=t?t.date:today();
-  $("scard").checked=t?!!t.card:!!o.card;$("sg").value=t?t.goalId||"":o.goalId||"";
+  sh={id:t?t.id:null,type:t?t.type:o.type||"expense",cat:t?t.category:o.category||null,wd:t?!!t.wd:!!o.wd,wish:o.wish||null,pay:t?(t.card?cidOf(t):""):(o.cardId||(o.card?defCard():""))};
+  $("sa").value=t?t.amount:o.amount||"";$("sn").value=t?t.note||"":o.note||"";$("sd").value=t?t.date:o.date||today();
+  $("sg").value=t?t.goalId||"":o.goalId||"";
+  $("smst").value="";$("smsd").open=false;
   $("shT").textContent=t?"Edit entry":o.title||"Add";$("sdel").hidden=!t;$("ssave").textContent=t?"Save changes":"Save";
   shType(sh.type);$("sh").showModal();if(!t)setTimeout(()=>$("sa").focus(),60);
 }
@@ -569,11 +1081,12 @@ $("ssave").onclick=()=>{
   const a=parseFloat($("sa").value),d=$("sd").value;
   if(!(a>0)||!d) return toast("Enter an amount");
   if(sh.type!=="saving"&&!sh.cat) return toast("Pick a category");
-  const r={type:sh.type,amount:a,date:d,note:$("sn").value.trim(),card:sh.type==="expense"&&$("scard").checked,category:sh.type==="saving"?"Savings":sh.cat,goalId:sh.type==="saving"?$("sg").value:"",wd:sh.type==="saving"&&sh.wd};
+  const r={type:sh.type,amount:a,date:d,note:$("sn").value.trim(),card:sh.type==="expense"&&!!sh.pay,cardId:sh.type==="expense"?sh.pay:"",category:sh.type==="saving"?"Savings":sh.cat,goalId:sh.type==="saving"?$("sg").value:"",wd:sh.type==="saving"&&sh.wd};
+  if(r.card)ensureCard(r.cardId);
   if(sh.id) upd(Object.assign(S.transactions.find(t=>t.id===sh.id),r));
   else S.transactions.push(upd(Object.assign({id:uid()},r)));
   if(sh.wish){const w=S.wishlist.find(x=>x.id===sh.wish);if(w)upd(Object.assign(w,{status:"bought",decidedAt:Date.now()}))}
-  const was=sh.id;$("sh").close();save();render();
+  const was=sh.id;$("sh").close();save();render();if(!was)fabOk();
   const p=plan(),wk=S.settings.period==="week";
   if(!was&&r.type==="expense"&&p&&(wk||d===today())) toast(`Added ${fmx(a)} · left ${wk?"this week":"today"} <b>${fmt(wk?p.leftW:p.left)}</b>`,3000);
   else toast(was?"Updated":r.type==="income"?"Income added":r.type==="saving"?"Saved 💪":"Added");
@@ -585,13 +1098,63 @@ function delTx(id){
   kill(t);save();render();toast(t.recId?"Deleted. The repeat won't add it again.":t.billId?"Deleted. The bill is marked unpaid.":"Deleted");return true;
 }
 
+/* ================= fill from bank / UPI SMS ================= */
+const MON={jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12};
+const tcase=s=>s.toLowerCase().replace(/\b\w/g,c=>c.toUpperCase());
+function parseSms(x){
+  const s=x.replace(/\s+/g," ").trim();if(!s)return null;
+  const am=s.match(/(?:rs\.?|inr|₹)\s*([\d,]+(?:\.\d{1,2})?)/i)||s.match(/([\d,]+\.\d{2})/);if(!am)return null;
+  const amount=parseFloat(am[1].replace(/,/g,""));if(!(amount>0))return null;
+  const out=/debited|spent|paid|sent|withdrawn|purchase|txn of|deducted|transferred to/i.test(s),inc=/credited|received|deposited|refund/i.test(s);
+  const type=inc&&!out?"income":"expense";
+  const card=type==="expense"&&(/credit\s*card/i.test(s)||(/\bcard\b/i.test(s)&&/spent|purchase/i.test(s)&&!/debit\s*card/i.test(s)));
+  let date=today();const iso=s.match(/\b(20\d\d)-(\d\d)-(\d\d)\b/);
+  const dm=iso?[0,iso[3],iso[2],iso[1]]:s.match(/\b(\d{1,2})[-\/ .]([A-Za-z]{3}|\d{1,2})[-\/ .,]{1,2}(\d{2,4})\b/);
+  if(dm){const d=+dm[1],m=isNaN(dm[2])?MON[dm[2].toLowerCase()]:+dm[2];let y=+dm[3];if(y<100)y+=2000;
+    if(m>=1&&m<=12&&d>=1&&d<=31){const iso=y+"-"+pad(m)+"-"+pad(d);if(iso<=today()&&iso>=addD(today(),-366))date=iso}}
+  let note="";
+  const vpa=s.match(/([a-z0-9._-]{2,})@[a-z]{2,}/i);
+  const mm=s.match(/(?:\bto|\bat|\btowards|\bfor|\binfo:?|\bby)\s+(?:vpa\s+|merchant\s+)?([A-Za-z][A-Za-z0-9&'._ -]{1,38}?)(?=\s+on\b|\s+ref|\s+via|\s+avl|\s+upi|\s+using|\s+from|[.,;(]|$)/i);
+  const fm=s.match(/\bfrom\s+(?:neft\s+|imps\s+|rtgs\s+|upi\s+)?([A-Za-z][A-Za-z0-9&'. -]{1,38}?)(?=\s+on\b|\s+ref|\s+via|[.,;(]|$)/i);
+  const bad=n=>!n||/^(your|a\/c|ac|account|card|rs|inr|the|neft|imps|rtgs|upi|bank|kotak|hdfc|icici|sbi|axis)\b/i.test(n);
+  if(vpa&&!/^(a\/c|ac|acct)/i.test(vpa[1]))note=vpa[1].replace(/[._-]+/g," ").replace(/\d+$/,"").trim();
+  else if(type==="income"&&fm&&!bad(fm[1]))note=fm[1].trim();
+  else if(mm)note=mm[1].trim();
+  if(bad(note))note=type==="income"&&fm&&!bad(fm[1])?fm[1].trim():"";
+  note=note?tcase(note).slice(0,30):"";
+  const l4=(s.match(/(?:x{2,}|\*{2,}|ending(?:\s+(?:with|in))?\s*)(\d{4})\b/i)||[])[1]||"";
+  return{amount,type,card,date,note,l4};
+}
+function fillFromSms(txt){
+  const r=parseSms(txt||$("smst").value);if(!r)return toast("Couldn't find an amount in that message",3000);
+  if(r.type!==sh.type){sh.cat=null;shType(r.type)}
+  $("sa").value=r.amount;$("sd").value=r.date;if(r.note)$("sn").value=r.note;
+  {const mc=r.type==="expense"&&r.l4?CARDS().find(c=>c.last4===r.l4):null;sh.pay=mc?mc.id:r.card?(sh.pay||defCard()):"";shPay()}
+  if(r.note){const prev=TX().filter(t=>t.type===r.type&&(t.note||"").toLowerCase()===r.note.toLowerCase()).sort((a,b)=>b.date.localeCompare(a.date))[0];
+    if(prev&&S.categories[r.type].some(c=>c.name===prev.category)){sh.cat=prev.category;shCats()}}
+  $("smsd").open=false;toast("Filled from SMS. Check the category, then Save.",3000);
+}
+$("smsf").onclick=()=>fillFromSms();
+$("smsp").onclick=async()=>{try{const t=await navigator.clipboard.readText();if(!t)return toast("Clipboard is empty");$("smst").value=t;fillFromSms(t)}catch(e){toast("Paste the SMS into the box instead",3000)}};
+
+/* ================= choice dialog ================= */
+function ask(title,html,btns){
+  return new Promise(res=>{
+    const d=$("dq");let done=false;const fin=v=>{if(done)return;done=true;if(d.open)d.close();res(v)};
+    $("dqT").textContent=title;$("dqB").innerHTML=html;
+    $("dqA").innerHTML=btns.map((b,i)=>`<button class="btn ${b.c||""}" data-i="${i}" style="flex:1">${esc(b.l)}</button>`).join("");
+    $("dqA").querySelectorAll("button").forEach(x=>x.onclick=()=>fin(btns[+x.dataset.i].v));
+    d.onclose=()=>fin(null);d.showModal();
+  });
+}
+
 /* ================= can I afford this ================= */
 function afCalc(){
   const x=parseFloat($("afa").value),p=plan(),r=$("afr");
   if(!(x>0)){r.className="res";r.textContent="Enter a price to see what it does to your plan.";return}
   if(!p){r.className="res";r.innerHTML="Set your income and savings target in Settings first.";return}
   const wk=S.settings.period==="week",left=wk?p.leftW:p.left,after=left-x,remain=p.lim-p.disc-x,daysAfter=Math.max(1,p.days-1),newDaily=(p.lim-p.disc-x)/daysAfter,oldDaily=(p.lim-p.disc)/daysAfter,
-  days=p.allow>0?x/p.allow:0,cap=S.settings.cardCap,cardNote=$("afc").checked&&cap>0&&cardMonth(cm())+x>cap?`<br>⚠️ Takes your card spending over its ${fmt(cap)} cap.`:"";
+  days=p.allow>0?x/p.allow:0,cap=S.settings.cardCap,cardNote=($("afc").checked&&cap>0&&cardMonth(cm())+x>cap?`<br>⚠️ Takes your card spending over its ${fmt(cap)} cap.`:"")+($("afc").checked&&carrying().length?`<br>⚠️ Your card is carrying a balance, so this starts charging about ${cardRate()}% a month from day one.`:"");
   if(after>=0){r.className="res ok";r.innerHTML=`✅ Fits. You'd still have <b>${fmt(after)}</b> left ${wk?"this week":"today"}.${cardNote}`}
   else if(remain>=0){r.className="res warn";r.innerHTML=`🟠 That's about <b>${days.toFixed(1)} days</b> of spending. It goes ${fmt(-after)} over ${wk?"this week's":"today's"} limit, and your daily limit for the rest of the month drops from <b>${fmt(oldDaily)}</b> to <b>${fmt(newDaily)}</b>.${cardNote}`}
   else{r.className="res bad";r.innerHTML=`🔴 Not this month. It would take <b>${fmt(-remain)}</b> out of your ${fmt(p.goal)} savings target. Put it on the wishlist and plan for it next month?${cardNote}`}
@@ -605,31 +1168,60 @@ $("afs").onclick=()=>{addWish("skipped");toast("Nice. That counts as saved 🎉"
 
 /* ================= plan tab forms ================= */
 let rType="expense",bEdit=null,rEdit=null,gEdit=null;
-seg("psub",v=>["bills","rec","goals","wish"].forEach(x=>$("p-"+x).hidden=x!==v));
-function bReset(){bEdit=null;["bn","ba","bdate"].forEach(i=>$(i).value="");$("bk").value="";$("bev").value="1";$("bs").textContent="Add bill";$("bfh").textContent="Add a bill";$("bcx").hidden=true}
+const PSUB=["bills","cards","rec","goals","wish"],psub=v=>{segOn("psub",v);PSUB.forEach(x=>$("p-"+x).hidden=x!==v)};
+let kEdit=null;
+function kReset(){kEdit=null;["kn","k4","kl","ko","kd"].forEach(i=>$(i).value="");$("ks").textContent="Add card";$("cfh").textContent="Add a credit card";$("kcx").hidden=true}
+$("kcx").onclick=kReset;
+$("ks").onclick=()=>{
+  const n=$("kn").value.trim(),l4=$("k4").value.replace(/\D/g,"").slice(-4),day=parseInt($("kd").value);
+  if(!n)return toast("Enter a card name");if($("kd").value&&!(day>=1&&day<=31))return toast("Due day must be 1 to 31");
+  const c=kEdit?S.cards.find(x=>x.id===kEdit):{id:uid()};
+  Object.assign(c,{name:n,last4:l4,limit:Math.max(0,parseFloat($("kl").value)||0),open:Math.max(0,parseFloat($("ko").value)||0)});upd(c);if(!kEdit)S.cards.push(c);
+  if(day){const b=cardBill(c.id)||S.bills.find(x=>x.id==="cb_"+c.id);
+    if(b){Object.assign(b,{deleted:false,type:"recurring",dueDay:day,every:1,card:true,cardId:b.cardId||c.id});b.start=b.start||cm();b.paidMonths=b.paidMonths||[];upd(b)}
+    else S.bills.push(upd({id:"cb_"+c.id,name:n+" bill",amount:0,card:true,cardId:c.id,cat:"Others",type:"recurring",dueDay:day,every:1,start:day>=new Date().getDate()?cm():addM(cm(),1),from:cm(),paidMonths:[],paid:false}))}
+  toast(kEdit?"Card updated":"Card added");kReset();save();render();
+};
+$("bk").onchange=()=>{$("bcdf").hidden=$("bk").value!=="card"};
+seg("psub",v=>PSUB.forEach(x=>$("p-"+x).hidden=x!==v));
+function bReset(){bEdit=null;["bn","ba","bdate"].forEach(i=>$(i).value="");$("bk").value="";$("bcdf").hidden=true;$("bev").value="1";$("bs").textContent="Add bill";$("bfh").textContent="Add a bill";$("bcx").hidden=true}
 $("bcx").onclick=bReset;
 $("bs").onclick=()=>{
   const name=$("bn").value.trim(),amt=parseFloat($("ba").value),card=$("bk").value==="card",d=$("bdate").value,ev=+$("bev").value;
   if(!name||(!card&&!(amt>0))) return toast("Enter a bill name and amount");if(!d) return toast("Pick the next due date");
   const b=bEdit?S.bills.find(x=>x.id===bEdit):{id:uid(),paidMonths:[],paid:false};
-  Object.assign(b,{name,amount:amt||0,card,cat:$("bc").value});
+  Object.assign(b,{name,amount:amt||0,card,cardId:card?$("bcd").value||defCard():"",cat:$("bc").value});if(card)ensureCard(b.cardId);if(!b.from)b.from=cm();
   if(ev){const k=d.slice(0,7);if(b.type!=="recurring"||b.start!==k||b.dueDay!==+d.slice(8)||b.every!==ev){b.start=k;b.dueDay=+d.slice(8);b.every=ev;b.paidMonths=(b.paidMonths||[]).filter(m=>m<k||(m>=k&&mdiff(k,m)%ev===0))}b.type="recurring"}
   else Object.assign(b,{type:"onetime",dueDate:d});
   upd(b);if(!bEdit)S.bills.push(b);toast(bEdit?"Bill updated":"Bill added");bReset();save();render();
 };
-function rReset(){rEdit=null;["ra","rn"].forEach(i=>$(i).value="");$("rd").value=today();$("rev").value="1";$("rk").checked=false;$("rs").textContent="Add";$("rfh").textContent="Add a repeating entry";$("rcx").hidden=true}
+function rReset(){rEdit=null;["ra","rn"].forEach(i=>$(i).value="");$("rd").value=today();$("rev").value="1";$("rk").value="";$("rs").textContent="Add";$("rfh").textContent="Add a repeating entry";$("rcx").hidden=true}
 function rSetType(v){rType=v;segOn("rt",v);$("rcf").hidden=v==="saving";$("rgf").hidden=v!=="saving";$("rkf").hidden=v!=="expense";fill()}
 seg("rt",rSetType);$("rcx").onclick=rReset;
 $("rs").onclick=()=>{
   const a=parseFloat($("ra").value),d=$("rd").value;if(!(a>0)||!d)return toast("Enter an amount and first date");
-  const R=rEdit?S.recurring.find(x=>x.id===rEdit):{id:uid(),active:true};
-  Object.assign(R,{type:rType,amount:a,category:rType==="saving"?"Savings":$("rc").value,goalId:rType==="saving"?$("rg").value:"",note:$("rn").value.trim(),card:rType==="expense"&&$("rk").checked,start:d,day:+d.slice(8),every:+$("rev").value});
+  const R=rEdit?S.recurring.find(x=>x.id===rEdit):{id:uid(),active:true,from:cm()};
+  Object.assign(R,{type:rType,amount:a,category:rType==="saving"?"Savings":$("rc").value,goalId:rType==="saving"?$("rg").value:"",note:$("rn").value.trim(),card:rType==="expense"&&!!$("rk").value,cardId:rType==="expense"?$("rk").value:"",start:d,day:+d.slice(8),every:+$("rev").value});if(R.card)ensureCard(R.cardId);
   upd(R);if(!rEdit)S.recurring.push(R);const n=runRec();toast((rEdit?"Updated":"Added")+(n?` · ${n} past entr${n>1?"ies":"y"} logged`:""));rReset();save();render();
 };
-function gReset(){gEdit=null;["gn","ga","gby"].forEach(i=>$(i).value="");$("gs").textContent="Add goal";$("gfh").textContent="Add a savings goal";$("gcx").hidden=true}
+function gKind(){
+  const k=$("gk").value;$("gvf").hidden=k!=="invest";
+  $("gal").textContent=k==="ef"?"Target (₹, blank = auto)":k==="invest"?"Target (₹, optional)":"Target (₹)";
+  const h=k==="ef"?`Leave the target blank to size it automatically at ${efMonths()} months of your essential spending (about ${fmt(efAuto())} now). It adjusts as your spending changes.`
+    :k==="invest"?"Money you put aside to this goal counts as invested. Add your SIP under Plan → Repeats as a Saving to this goal, and update the current value once a month from your fund app.":"";
+  $("ghint").innerHTML=h;$("ghint").hidden=!h;
+}
+$("gk").onchange=gKind;
+function gReset(){gEdit=null;["gn","ga","gby","gv"].forEach(i=>$(i).value="");$("gk").value="save";gKind();$("gs").textContent="Add goal";$("gfh").textContent="Add a savings goal";$("gcx").hidden=true}
 $("gcx").onclick=gReset;
-$("gs").onclick=()=>{const n=$("gn").value.trim(),a=parseFloat($("ga").value);if(!n||!(a>0))return toast("Enter a goal name and target");
-  const g=gEdit?S.goals.find(x=>x.id===gEdit):{id:uid()};Object.assign(g,{name:n,target:a,by:$("gby").value});upd(g);if(!gEdit)S.goals.push(g);toast(gEdit?"Goal updated":"Goal added");gReset();save();render()};
+$("gs").onclick=()=>{const n=$("gn").value.trim(),a=parseFloat($("ga").value),k=$("gk").value,v=parseFloat($("gv").value);
+  if(!n)return toast("Enter a goal name");if(k==="save"&&!(a>0))return toast("Enter a target amount");
+  if(k==="ef"&&!gEdit&&efGoal())return toast("You already have an emergency fund goal");
+  const g=gEdit?S.goals.find(x=>x.id===gEdit):{id:uid()};
+  Object.assign(g,{name:n,kind:k,target:a>0?a:0,auto:k==="ef"&&!(a>0),by:$("gby").value});
+  if(k==="invest"){g.vh=g.vh||[];if(v>=0&&$("gv").value!==""&&Math.round(v)!==Math.round(gValue(g)))setVal(g,v)}
+  upd(g);if(!gEdit)S.goals.push(g);toast(gEdit?"Goal updated":"Goal added");gReset();save();render()};
+function setVal(g,v){const d=today();g.vh=(g.vh||[]).filter(x=>x.d!==d);g.vh.push({d,v});upd(g)}
 $("ws").onclick=()=>{const n=$("wn").value.trim(),a=parseFloat($("wa").value);if(!n||!(a>0))return toast("Enter what it is and the price");
   S.wishlist.push(upd({id:uid(),name:n,amount:a,addedAt:Date.now(),status:"waiting"}));$("wn").value=$("wa").value="";save();render();toast("Added. Decide in 24 hours.")};
 
@@ -638,30 +1230,59 @@ const find=(c,id)=>S[c].find(x=>x.id===id);
 const ACT={
   edit(id){openSheet({id})},
   del(id){delTx(id)},
-  pay(id){
+  async pay(id){
     const b=find("bills",id);if(!b)return;const s=bst(b),k=s.occ.k,rec=b.type==="recurring";
     const txid="b_"+b.id+"_"+k,cpid="cp_"+b.id+"_"+k;
+    let cv=0,full=true;
+    if(!s.paid&&b.card){
+      const due=Math.max(0,Math.round(cardDue(cidOf(b))));cv=parseFloat(prompt("Amount paid towards "+cardName(cidOf(b))+" (₹)",due));if(!(cv>0))return;
+      if(cv<due-1){const carry=due-cv,r=cardRate();
+        const ch=await ask("That leaves "+fmt(carry)+" on the card",
+          `Whatever you don't pay in full carries interest of about <b>${r}% a month</b> (around ${(r*12).toFixed(0)}% a year). On ${fmt(carry)} that's roughly <b>${fmt(carry*r/100)} a month</b>, and new card purchases also start charging interest from day one until the balance is cleared.<br><br>If you can, pay the full ${fmt(due)}.`,
+          [{l:"I paid "+fmt(due)+" (full)",v:"full",c:"ok"},{l:"Record "+fmt(cv)+" only",v:"part",c:"g"}]);
+        if(!ch)return;if(ch==="full")cv=due;else full=false}
+    }
     S.transactions.forEach(t=>{if(!t.deleted&&t.billId===id&&t.billKey===k)kill(t)});S.cardPays.forEach(p=>{if(!p.deleted&&p.billId===id&&p.billKey===k)kill(p)});
     if(s.paid){if(rec)b.paidMonths=b.paidMonths.filter(x=>x!==k);else b.paid=false}
     else{
-      if(b.card){const v=parseFloat(prompt("Amount paid towards the card (₹)",Math.max(0,Math.round(cardDue()))));if(!(v>0))return;
-        const o=S.cardPays.find(p=>p.id===cpid);if(o)upd(Object.assign(o,{deleted:false,amount:v,date:today()}));else S.cardPays.push(upd({id:cpid,billId:id,billKey:k,date:today(),amount:v}))}
+      if(b.card){const v=cv;
+        const o=S.cardPays.find(p=>p.id===cpid);if(o)upd(Object.assign(o,{deleted:false,amount:v,date:today(),full,cardId:cidOf(b)}));else S.cardPays.push(upd({id:cpid,billId:id,billKey:k,date:today(),amount:v,full,cardId:cidOf(b)}))}
       else{const o=S.transactions.find(t=>t.id===txid),r={type:"expense",amount:+b.amount,category:b.cat||"Others",date:today(),note:"Bill: "+b.name,billId:id,billKey:k,deleted:false};
         if(o)upd(Object.assign(o,r));else S.transactions.push(upd(Object.assign({id:txid},r)))}
       if(rec)b.paidMonths.push(k);else b.paid=true;
-      toast(`${b.name} marked paid`)}
+      toast(b.card&&full?`${b.name} paid in full ✅`:`${b.name} marked paid`)}
     upd(b);save();render()},
-  ebill(id){const b=find("bills",id);if(!b)return;bEdit=id;show("pl");segOn("psub","bills");["bills","rec","goals","wish"].forEach(x=>$("p-"+x).hidden=x!=="bills");
-    $("bn").value=b.name;$("ba").value=b.amount||"";$("bc").value=b.cat||"Others";$("bk").value=b.card?"card":"";
+  ebill(id){const b=find("bills",id);if(!b)return;bEdit=id;show("pl");psub("bills");
+    $("bn").value=b.name;$("ba").value=b.amount||"";$("bc").value=b.cat||"Others";$("bk").value=b.card?"card":"";$("bcdf").hidden=!b.card;if(b.card)$("bcd").value=cidOf(b);
     if(b.type==="recurring"){const s=bst(b);$("bdate").value=s.occ?s.occ.due:dk(b.start,b.dueDay);$("bev").value=String(b.every||1)}else{$("bdate").value=b.dueDate;$("bev").value="0"}
     $("bs").textContent="Save bill";$("bfh").textContent="Edit bill";$("bcx").hidden=false;scrollTo(0,0)},
   dbill(id){if(confirm("Delete this bill? Past payments stay in your history.")){kill(find("bills",id));save();render()}},
   prec(id){const R=find("recurring",id);if(!R)return;if(R.active===false){R.active=true;R.start=today();R.day=+R.start.slice(8);toast("Resumed from today")}else{R.active=false;toast("Paused")}upd(R);save();render()},
-  erec(id){const R=find("recurring",id);if(!R)return;rEdit=id;rSetType(R.type);$("ra").value=R.amount;$("rc").value=R.category;$("rg").value=R.goalId||"";$("rn").value=R.note||"";$("rd").value=R.start;$("rev").value=String(R.every||1);$("rk").checked=!!R.card;
+  erec(id){const R=find("recurring",id);if(!R)return;rEdit=id;rSetType(R.type);$("ra").value=R.amount;$("rc").value=R.category;$("rg").value=R.goalId||"";$("rn").value=R.note||"";$("rd").value=R.start;$("rev").value=String(R.every||1);$("rk").value=R.card?cidOf(R):"";
     $("rs").textContent="Save";$("rfh").textContent="Edit repeating entry";$("rcx").hidden=false;scrollTo(0,0)},
   drec(id){if(confirm("Stop and delete this repeating entry? Entries already added stay.")){kill(find("recurring",id));save();render()}},
   gadd(id){openSheet({type:"saving",goalId:id,title:"Add to goal"})},
-  egoal(id){const g=find("goals",id);if(!g)return;gEdit=id;$("gn").value=g.name;$("ga").value=g.target;$("gby").value=g.by||"";$("gs").textContent="Save goal";$("gfh").textContent="Edit goal";$("gcx").hidden=false;scrollTo(0,0)},
+  egoal(id){const g=find("goals",id);if(!g)return;gEdit=id;show("pl");psub("goals");
+    $("gn").value=g.name;$("gk").value=g.kind||"save";gKind();$("ga").value=isEF(g)&&g.auto?"":(g.target||"");$("gv").value="";$("gv").placeholder=isInv(g)?"Now "+fmt(gValue(g)):"From your fund app";$("gby").value=g.by||"";
+    $("gs").textContent="Save goal";$("gfh").textContent="Edit goal";$("gcx").hidden=false;scrollTo(0,0)},
+  gval(id){const g=find("goals",id);if(!g)return;const v=parseFloat(prompt(`Current value of ${g.name} (₹), from your fund or broker app`,Math.round(gValue(g))));
+    if(!(v>=0))return;setVal(g,v);save();render();const p=goalSaved(g);toast(`Updated · ${v>=p?"+":"−"}${fmt(Math.abs(v-p))} vs invested`,3000)},
+  efnew(){S.goals.push(upd({id:uid(),name:"Emergency fund",kind:"ef",auto:true,target:0,by:""}));save();render();toast(`Emergency fund started · target ${fmt(efAuto())}`,3000)},
+  efhide(){DEV.efHide=true;saveDev();render()},
+  ecard(id){const c=find("cards",id);if(!c)return;kEdit=id;const b=cardBill(id);$("kn").value=c.name;$("k4").value=c.last4||"";$("kl").value=c.limit||"";$("ko").value=c.open||"";$("kd").value=b&&b.type==="recurring"?b.dueDay:"";
+    $("ks").textContent="Save card";$("cfh").textContent="Edit card";$("kcx").hidden=false;scrollTo(0,0)},
+  dcard(id){const c=find("cards",id);if(!c)return;
+    if(TX().some(t=>t.card&&cidOf(t)===id)||live(S.cardPays).some(p=>cidOf(p)===id))return toast("This card has entries. Rename it with Edit, or delete its entries first.",3500);
+    if(!confirm(`Delete ${c.name}?`))return;live(S.bills).forEach(b=>{if(b.card&&b.cardId===id)kill(b)});kill(c);save();render()},
+  tput(_,b){const ef=efGoal();openSheet({type:"saving",amount:b.dataset.n,goalId:ef&&goalSaved(ef)<gTarget(ef)?ef.id:"",title:"Put aside"})},
+  wkrep(ws){rMode="week";rWs=ws;show("rp");rep()},
+  msadd(d){openSheet({type:"expense",date:d,title:"Add for "+wday(d)+" "+fdate(d)})},
+  msno(d){markNoSpend([d]);toast(fdate(d)+" marked as no spending 👍")},
+  async msall(){const ds=missed().days;const ok=await ask(`Mark ${ds.length} days as no spending?`,`Only do this if you really spent nothing on these days:<br>${ds.slice(0,12).map(fdate).join(", ")}${ds.length>12?" …":""}`,[{l:"Yes, mark all",v:1,c:"ok"},{l:"Cancel",v:null,c:"g"}]);if(ok){markNoSpend(ds);toast(ds.length+" days marked")}},
+  swput(k,b){DEV.sweep=k;saveDev();const ef=efGoal();openSheet({type:"saving",amount:b.dataset.n,goalId:ef&&goalSaved(ef)<gTarget(ef)?ef.id:"",note:"Leftover from "+mname(k),title:"Put aside leftover"});render()},
+  swno(k){DEV.sweep=k;saveDev();render()},
+  wkput(ws,b){DEV.wk=ws;saveDev();openSheet({type:"saving",amount:b.dataset.n,note:"Under budget, week of "+fdate(ws),title:"Put aside"});render()},
+  wkok(ws){DEV.wk=ws;saveDev();render()},
   dgoal(id){if(confirm("Delete this goal? Money put aside for it moves to general savings.")){S.transactions.forEach(t=>{if(t.goalId===id){t.goalId="";upd(t)}});kill(find("goals",id));save();render()}},
   wbuy(id){const w=find("wishlist",id);if(w)openSheet({amount:w.amount,note:w.name,wish:id,title:"Buy: "+w.name})},
   wskip(id){const w=find("wishlist",id);if(!w)return;upd(Object.assign(w,{status:"skipped",decidedAt:Date.now()}));save();render();toast(`Skipped. ${fmt(w.amount)} stays with you 🎉`)},
@@ -686,10 +1307,10 @@ document.addEventListener("click",e=>{
   if(e.target.id==="afo")openAf();
   if(e.target.id==="pya")openSheet({type:"saving",amount:e.target.dataset.n,title:"Put aside"});
 });
-["sh","af"].forEach(id=>$(id).addEventListener("click",e=>{if(e.target===$(id))$(id).close()}));
+["sh","af","dq"].forEach(id=>$(id).addEventListener("click",e=>{if(e.target===$(id))$(id).close()}));
 
 /* ================= settings ================= */
-$("psv").onclick=()=>{const s=S.settings;s.income=Math.max(0,parseFloat($("pi").value)||0);s.target=Math.min(60,Math.max(0,parseFloat($("pt").value)||0));s.step=Math.max(0,parseFloat($("ps").value)||0);s.cardOpen=Math.max(0,parseFloat($("pc").value)||0);s.cardCap=Math.max(0,parseFloat($("pcap").value)||0);s.base=cm();save(true);render();toast("Plan saved")};
+$("psv").onclick=()=>{const s=S.settings;s.income=Math.max(0,parseFloat($("pi").value)||0);s.target=Math.min(60,Math.max(0,parseFloat($("pt").value)||0));s.step=Math.max(0,parseFloat($("ps").value)||0);s.cardCap=Math.max(0,parseFloat($("pcap").value)||0);const cr=parseFloat($("pcr").value);s.cardRate=cr>=0?Math.min(10,cr):3.5;s.efMonths=Math.min(12,Math.max(1,Math.round(parseFloat($("pem").value)||3)));s.base=cm();save(true);render();toast("Plan saved")};
 seg("sper",v=>{S.settings.period=v;save(true);render()});
 let cKind="expense",cCls="need";
 seg("ck",v=>{cKind=v;$("cclf").hidden=v!=="expense"});seg("ccl",v=>cCls=v);
@@ -697,17 +1318,21 @@ $("cadd").onclick=()=>{const n=$("cn").value.trim();if(!n)return toast("Enter a 
   if(l.some(c=>c.name.toLowerCase()===n.toLowerCase())||n.toLowerCase()==="savings")return toast("Already exists");l.push(cKind==="expense"?{name:n,cls:cCls}:{name:n});$("cn").value="";save(true);render();toast("Category added")};
 $("bgs").onclick=()=>{document.querySelectorAll("[data-bc]").forEach(i=>{const v=parseFloat(i.value);if(v>0)S.budgets[i.dataset.bc]=v;else delete S.budgets[i.dataset.bc]});save(true);render();toast("Budgets saved")};
 seg("sth",v=>{S.settings.theme=v;save(true);render()});
+seg("san",v=>{DEV.anim=v==="on";saveDev();applyAnim();if(DEV.anim)pulse()});
 $("gear").onclick=()=>show("se");
 const dlf=(n,c,t)=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([c],{type:t}));a.download=n;a.click()};
-const exportJson=()=>{dlf("moneywise-backup-"+today()+".json",JSON.stringify(S,null,2),"application/json");DEV.lastBackup=Date.now();saveDev();render()};
+const exportJson=()=>{dlf("kudukka-backup-"+today()+".json",JSON.stringify(S,null,2),"application/json");DEV.lastBackup=Date.now();saveDev();render()};
 $("exj").onclick=exportJson;
-$("exc").onclick=()=>{const q=v=>'"'+String(v??"").replace(/"/g,'""')+'"';dlf("moneywise-transactions-"+today()+".csv",["Date,Type,Category,Amount,Paid with,Note"].concat(TX().sort((a,b)=>a.date.localeCompare(b.date)).map(t=>[t.date,t.type==="saving"?(t.wd?"saving-withdrawal":"saving"):t.type,q(t.category),t.amount,t.card?"card":"",q(t.note)].join(","))).join("\n"),"text/csv")};
+$("exc").onclick=()=>{const q=v=>'"'+String(v??"").replace(/"/g,'""')+'"';dlf("kudukka-transactions-"+today()+".csv",["Date (DD-MM-YYYY),Type,Category,Amount,Paid with,Note"].concat(TX().sort((a,b)=>a.date.localeCompare(b.date)).map(t=>[fdate(t.date),t.type==="saving"?(t.wd?"saving-withdrawal":"saving"):t.type,q(t.category),t.amount,t.card?q(cardName(cidOf(t))):"",q(t.note)].join(","))).join("\n"),"text/csv")};
 $("imb").onclick=()=>$("imf").click();
 $("imf").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
-  r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.categories||!Array.isArray(d.transactions))throw 0;
-    const m=confirm(`Import ${d.transactions.length} entries?\n\nOK = merge with what's here\nCancel = choose replace instead`);
-    if(m)S=merge(S,norm(d));else{if(!confirm("Replace ALL current data with this file? This cannot be undone."))return;S=norm(d)}
-    runRec();save(true);render();toast("Data imported")}catch(x){toast("Invalid backup file")}};r.readAsText(f);e.target.value=""};
+  r.onload=async()=>{let d;try{d=JSON.parse(r.result);if(!d.categories||!Array.isArray(d.transactions))throw 0}catch(x){return toast("Invalid backup file")}
+    const ch=await ask(`Import ${d.transactions.length} entries?`,"<b>Merge</b> keeps everything on this device and adds what's new from the file.<br><b>Replace</b> deletes what's here and uses only the file.",
+      [{l:"Merge",v:"merge",c:"ok"},{l:"Replace all",v:"replace",c:"r"},{l:"Cancel",v:null,c:"g"}]);
+    if(!ch)return;
+    if(ch==="replace"){const sure=await ask("Replace all data?","Everything currently on this device will be deleted and replaced by the file. This can't be undone.",[{l:"Yes, replace",v:1,c:"r"},{l:"Cancel",v:null,c:"g"}]);if(!sure)return;S=norm(d)}
+    else S=merge(S,norm(d));
+    runRec();save(true);render();toast("Data imported")};r.readAsText(f);e.target.value=""};
 $("rst").onclick=()=>{if(!confirm("Delete ALL data on this device?"))return;if(confirm("Download a backup first? (recommended)"))exportJson();if(!confirm("Last check: delete everything now?"))return;localStorage.removeItem(KEY);S=norm(null);render();toast("All data deleted")};
 
 /* ================= Google Drive sync ================= */
@@ -758,24 +1383,68 @@ $("ics").onclick=()=>{
     const rec=b.type==="recurring",d=rec?bst(b).occ.due:b.dueDate;
     return "BEGIN:VEVENT\r\nUID:"+b.id+"@moneywise\r\nDTSTAMP:"+ds(today())+"T000000Z\r\nDTSTART;VALUE=DATE:"+ds(d)+"\r\nSUMMARY:Due: "+b.name.replace(/[,;\\]/g," ")+"\r\n"+(rec?"RRULE:FREQ=MONTHLY;INTERVAL="+(b.every||1)+(b.dueDay>28?";BYMONTHDAY=-1":"")+"\r\n":"")+al+"END:VEVENT\r\n"}).join("");
   if(!ev) return toast("Add a bill first");
-  dlf("moneywise-reminders.ics","BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//MoneyWise//EN\r\n"+ev+"END:VCALENDAR\r\n","text/calendar");
+  dlf("kudukka-bill-reminders.ics","BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Kudukka//EN\r\n"+ev+"END:VCALENDAR\r\n","text/calendar");
 };
 function notify(){
   if(!("Notification" in window)||Notification.permission!=="granted") return;
+  const w=weekInfo();
+  if(w&&DEV.wkN!==w.ws){DEV.wkN=w.ws;saveDev();navigator.serviceWorker.ready.then(r=>r.showNotification("Kudukka · your week",{body:`Spent ${fmt(w.spent)}${w.lim?" of "+fmt(w.lim):""} · ${w.ns} no-spend day${w.ns===1?"":"s"}. Open for your check-in.`,icon:"icon-192.png"})).catch(()=>{})}
   const a=alerts().filter(x=>x.l==="bad"||x.l==="warn");if(!a.length||DEV.notified===today()) return;DEV.notified=today();saveDev();
-  navigator.serviceWorker.ready.then(r=>r.showNotification("MoneyWise",{body:a.slice(0,3).map(x=>x.m.replace(/<[^>]+>/g,"")).join("\n"),icon:"icon-192.png"})).catch(()=>{});
+  navigator.serviceWorker.ready.then(r=>r.showNotification("Kudukka",{body:a.slice(0,3).map(x=>x.m.replace(/<[^>]+>/g,"")).join("\n"),icon:"icon-192.png"})).catch(()=>{});
 }
-$("ntf").onclick=async()=>{if(!("Notification" in window)) return toast("Not supported on this browser");const r=await Notification.requestPermission();toast(r==="granted"?"App alerts on":"Permission not granted");if(r==="granted")notify()};
+$("ntf").onclick=async()=>{if(!("Notification" in window)) return toast("Not supported on this browser");const r=await Notification.requestPermission();
+  if(r!=="granted")return toast("Permission not granted");notify();const bg=await setupDaily();
+  toast(bg?"App alerts on, including daily reminders while closed":"App alerts on. For a daily reminder while the app is closed, use 'Add daily reminder to calendar'.",4500)};
+/* daily tracking settings */
+$("sstv").onclick=()=>{const v=$("sstart").value;if(!v)return toast("Pick a date");S.settings.startDate=v;save(true);render();toast("Daily tracking from "+fdate(v))};
+$("dics").onclick=()=>{
+  const st=($("sstart").value||startDate()).replace(/-/g,""),tm=($("srt").value||"21:00").replace(":","")+"00",u=location.href.split("#")[0];
+  dlf("kudukka-daily-reminder.ics","BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Kudukka//EN\r\nBEGIN:VEVENT\r\nUID:daily-note@kudukka\r\nDTSTAMP:"+today().replace(/-/g,"")+"T000000Z\r\nDTSTART:"+st+"T"+tm+"\r\nDURATION:PT5M\r\nRRULE:FREQ=DAILY\r\nSUMMARY:Note today's spending in Kudukka\r\nDESCRIPTION:Open Kudukka and add today's expenses\\, or mark No spending. "+u+"\r\nURL:"+u+"\r\nBEGIN:VALARM\r\nACTION:DISPLAY\r\nDESCRIPTION:Note today's spending in Kudukka\r\nTRIGGER:PT0M\r\nEND:VALARM\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n","text/calendar");
+};
+$("sclr").onclick=async()=>{
+  const st=startDate(),old=TX().filter(t=>t.date<st),cp=live(S.cardPays).filter(p=>p.date<st);
+  if(!old.length&&!cp.length)return toast("Nothing dated before "+fdate(st));
+  const ok=await ask("Clear entries before "+fdate(st)+"?",`This deletes <b>${old.length}</b> entr${old.length===1?"y":"ies"}${cp.length?` and ${cp.length} card payment${cp.length>1?"s":""}`:""} dated before ${fdate(st)}. A backup file downloads first so you can undo by importing it.`,[{l:"Back up and clear",v:1,c:"r"},{l:"Cancel",v:null,c:"g"}]);
+  if(!ok)return;exportJson();
+  old.forEach(kill);cp.forEach(kill);live(S.noSpend).filter(x=>x.date<st).forEach(kill);
+  S.goals.forEach(g=>{if(g.vh&&g.vh.some(x=>x.d<st)){g.vh=g.vh.filter(x=>x.d>=st);upd(g)}});
+  save();render();toast("Cleared. Starting fresh from "+fdate(st),3500)};
+
+/* ================= DD-MM-YYYY date boxes ================= */
+/* each <input type=date> stays as the hidden value holder (YYYY-MM-DD for the code);
+   you type or see DD-MM-YYYY, and 📅 opens the phone's calendar */
+function ddBox(el){
+  const PV=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,"value"),w=document.createElement("div"),t=document.createElement("input"),b=document.createElement("button");
+  w.className="dwrap";t.type="text";t.inputMode="numeric";t.placeholder="DD-MM-YYYY";t.maxLength=10;t.autocomplete="off";b.type="button";b.className="dbtn";b.textContent="📅";b.setAttribute("aria-label","Pick a date");
+  el.parentNode.insertBefore(w,el);w.append(t,b,el);el.classList.add("dhid");el.tabIndex=-1;
+  const lbl=w.parentNode.querySelector("label");if(lbl)lbl.onclick=()=>t.focus();
+  const showV=()=>{t.value=fdate(PV.get.call(el))};
+  Object.defineProperty(el,"value",{configurable:true,get(){return PV.get.call(el)},set(v){PV.set.call(el,v);showV()}});
+  el.addEventListener("change",showV);el.addEventListener("input",showV);
+  t.addEventListener("input",()=>{
+    const d=t.value.replace(/\D/g,"").slice(0,8);t.value=d.length>4?d.slice(0,2)+"-"+d.slice(2,4)+"-"+d.slice(4):d.length>2?d.slice(0,2)+"-"+d.slice(2):d;
+    if(d.length===8){const iso=d.slice(4)+"-"+d.slice(2,4)+"-"+d.slice(0,2),x=new Date(iso+"T00:00:00");
+      if(!isNaN(x)&&x.getDate()===+d.slice(0,2)&&x.getMonth()+1===+d.slice(2,4)){PV.set.call(el,iso);el.dispatchEvent(new Event("change"))}}});
+  t.addEventListener("blur",()=>{if(t.value&&t.value!==fdate(PV.get.call(el)))toast("Not a real date. Use DD-MM-YYYY");showV()});
+  b.onclick=()=>{try{el.showPicker()}catch(e){el.focus()}};
+  showV();
+}
+document.querySelectorAll('input[type=date]').forEach(ddBox);
 
 /* ================= init ================= */
+applyAnim();
+seg("rmode",v=>{rMode=v;DEV.rmode=v;saveDev();pulse();rep()});
+$("rwp").onclick=()=>{rWs=addD(rWs||wkStart(today()),-7);pulse();rep()};
+$("rwn").onclick=()=>{const tw=wkStart(today());if((rWs||tw)<tw){rWs=addD(rWs,7);pulse();rep()}};
 if(localStorage.mwN){DEV.notified=localStorage.mwN;localStorage.removeItem("mwN");saveDev()}
-$("tm").value=$("rm").value=cm();$("rd").value=today();
-$("tm").onchange=$("tf").onchange=txl;$("tq").oninput=txl;$("rm").onchange=rep;
+$("tm").value=$("rm").value=cm();$("rd").value=today();gKind();
+$("tm").onchange=$("tf").onchange=txl;$("tq").oninput=txl;$("rm").onchange=()=>{pulse();rep()};
 document.querySelectorAll("nav button[data-s]").forEach(b=>b.onclick=()=>show(b.dataset.s));
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{if(S.settings.theme==="auto")theme()});
 document.addEventListener("visibilitychange",()=>{if(!document.hidden){runRec();render();notify();queueSync()}});
-runRec();render();notify();
-if("serviceWorker" in navigator) addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
+runRec();render();pulse();notify();
+try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
+if("serviceWorker" in navigator) addEventListener("load",()=>navigator.serviceWorker.register("sw.js").then(()=>setupDaily()).catch(()=>{}));
 </script>
 </body>
 </html>
